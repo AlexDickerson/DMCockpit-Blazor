@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DMCockpit.Services;
+using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 
 namespace DMCockpit
 {
@@ -21,12 +23,15 @@ namespace DMCockpit
     		builder.Logging.AddDebug();
 #endif
 
+            builder.Services.RegisterDMCockpitServices();
+            builder.Services.AddMudServices();
+
             return builder.Build();
         }
 
-        private static void RegisterServices(IServiceCollection services)
+        private static void RegisterDMCockpitServices(this IServiceCollection services)
         {
-
+            services.AddSingleton<IDisplayManager, DisplayManager>();
         }
     }
 }

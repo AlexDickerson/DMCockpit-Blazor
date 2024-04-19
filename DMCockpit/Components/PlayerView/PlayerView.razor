@@ -1,3 +1,15 @@
-﻿<h3>PlayerView</h3>
+﻿@using MudBlazor
 
-<p> This is the player view </p>
+@if (!String.IsNullOrEmpty(imageBase64))
+{
+    <MudImage src="@imageBase64" class="myImage" />
+}
+
+<style>
+    .myImage {
+        max-width: 100vw;
+        height: auto;
+        max-height: 100vh;
+        width: auto;
+    }
+</style>
