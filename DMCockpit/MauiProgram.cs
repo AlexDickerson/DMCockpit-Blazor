@@ -23,5 +23,10 @@ namespace DMCockpit
 
             return builder.Build();
         }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+
+        }
     }
 }
