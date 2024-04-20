@@ -1,5 +1,8 @@
 ﻿using DMCockpit.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
+using Microsoft.UI.Windowing;
+using Microsoft.UI;
 using MudBlazor.Services;
 
 namespace DMCockpit
@@ -25,6 +28,25 @@ namespace DMCockpit
 
             builder.Services.RegisterDMCockpitServices();
             builder.Services.AddMudServices();
+
+            builder.ConfigureLifecycleEvents(events =>
+            {
+                events.AddWindows(windowsLifecycleBuilder =>
+                {
+                    windowsLifecycleBuilder.OnWindowCreated(window =>
+                    {
+                        window.ExtendsContentIntoTitleBar = false;
+                        
+                        IntPtr nativeWindow = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                        WindowId win32WindowsId = Win32Interop.GetWindowIdFromWindow(nativeWindow);
+                        AppWindow winuiAppWindow = AppWindow.GetFromWindowId(win32WindowsId);
+                        if (winuiAppWindow.Presenter is OverlappedPresenter p)
+                        {
+                            p.SetBorderAndTitleBar(false, false);
+                        }
+                    });
+                });
+            });
 
             return builder.Build();
         }

@@ -5,8 +5,8 @@
              xmlns:local="clr-namespace:DMCockpit"
              xmlns:pages="clr-namespace:DMCockpit.Components.PlayerView"
              BackgroundColor="{DynamicResource PageBackgroundColor}"
-             Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False"
+             Shell.NavBarIsVisible="false"
+             Shell.TabBarIsVisible="false"
              Title="">
     
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">

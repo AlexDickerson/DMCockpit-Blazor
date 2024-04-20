@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using SixLabors.ImageSharp;
+using Image = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace DMCockpit.Services
 {
     public interface IDisplayManager
     {
-        Task UpdateImageWithBase64(string base64String);
-        void SetSubsection(int[] ints); // (x1, y1, x2, y2)
+        Task UpdateImageWithBase64(IBrowserFile file);
+        void SetSubsection(Coordinates[] coordinates);
 
         string GetControlImage();
 
         event ImageUpdated ImageUpdatedEvent;
+    }
+
+    public class Coordinates
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 
     public delegate void ImageUpdated(string imageBase64);
@@ -20,19 +28,27 @@ namespace DMCockpit.Services
     {
         public event ImageUpdated? ImageUpdatedEvent;
 
-        private Bitmap image = new Bitmap(1, 1);
-        private int[] ints = [0, 0,  160, 90];
+        private Coordinates[] coordinates = new Coordinates[2];
 
-        public async Task UpdateImageWithBase64(string base64String)
+        private Image image;
+
+        public async Task UpdateImageWithBase64(IBrowserFile file)
         {
-            var bytes = Convert.FromBase64String(base64String);
-            var content = new StreamContent(new MemoryStream(bytes));
+            using (var stream = file.OpenReadStream(maxAllowedSize: file.Size))
+            {
+                var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
 
-            image = new Bitmap(await content.ReadAsStreamAsync());
+                using (var content = new StreamContent(memoryStream))
+                {
+                    image = SixLabors.ImageSharp.Image.Load(await content.ReadAsStreamAsync());
+                }
+            }
 
             if (image.Height > image.Width)
             {
-                image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                image.Mutate(x => x.RotateFlip(RotateMode.Rotate90, FlipMode.None));
             }
 
             UpdateImage(image);
@@ -40,47 +56,77 @@ namespace DMCockpit.Services
 
         public string GetControlImage()
         {
-            var bytes = BitmapToBytes(image);
-            var base64String = Convert.ToBase64String(bytes);
-            var imageSource = string.Format("data:image/jpeg;base64,{0}", base64String);
-
-            return imageSource;
+            return image.ToBase64String(PngFormat.Instance);
         }
 
-        private void UpdateImage(Bitmap image)
+        private void UpdateImage(Image image)
         {
-            image = DrawSubsection(image);
-            var bytes = BitmapToBytes(image);
-            var base64String = Convert.ToBase64String(bytes);
-            var imageSource = string.Format("data:image/jpeg;base64,{0}", base64String);
-            OnImageUpdated(imageSource);
+            var imageString = DrawSubsection(image, coordinates).ToBase64String(PngFormat.Instance);
+            OnImageUpdated(imageString);
         }
 
-        private Bitmap DrawSubsection(Bitmap image)
+        private Image DrawSubsection(Image image, Coordinates[] coordinates)
         {
-            var x1 = ints[0];
-            var y1 = ints[1];
-            var x2 = ints[2];
-            var y2 = ints[3];
+            if (coordinates[0] == null || coordinates[1] == null)
+            {
+                return image;
+            }
+
+            var x1 = (int)coordinates[0].X;
+            var y1 = (int)coordinates[0].Y;
+            var x2 = (int)coordinates[1].X;
+            var y2 = (int)coordinates[1].Y;
+
+            x1 = (int)(x1 * image.Width / 100);
+            y1 = (int)(y1 * image.Height / 100);
+            x2 = (int)(x2 * image.Width / 100);
+            y2 = (int)(y2 * image.Height / 100);
+
+            // ensure coordinates are within bounds
+            x1 = Math.Max(0, x1);
+            y1 = Math.Max(0, y1);
+            x2 = Math.Min(image.Width, x2);
+            y2 = Math.Min(image.Height, y2);
 
             var width = x2 - x1;
             var height = y2 - y1;
 
-            var subsection = image.Clone(new Rectangle(x1, y1, width, height), image.PixelFormat);
-
-            return subsection;
-        }
-
-        private byte[] BitmapToBytes(Bitmap img)
-        {
-            using (MemoryStream stream = new MemoryStream())
+            // ensure ratio is always 16:9
+            if (width > height)
             {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
+                height = (int)(width * 9 / 16);
             }
+            else
+            {
+                width = (int)(height * 16 / 9);
+            }
+
+            //Bitmap.Clone with throw an OutOfMemoryException if the rectangle is outside the bounds of the image
+            //So we need to ensure the rectangle is within the bounds of the image
+            if (y1 + height > image.Height)
+            {
+                y1 = image.Height - height;
+            }
+
+            if (x1 + width > image.Width)
+            {
+                x1 = image.Width - width;
+            }
+
+            //var subsection = image.Clone(new Rectangle(x1, y1, width, height));
+
+            var subsction = image.Clone(x => x.Crop(new Rectangle(x1, y1, width, height)));
+
+            return subsction;
         }
 
-        public void SetSubsection(int[] ints) => this.ints = ints;
+        public void SetSubsection(Coordinates[] coordinates)
+        {
+            this.coordinates = coordinates;
+
+            UpdateImage(image);
+        }
+
         protected virtual void OnImageUpdated(string imageBase64) => ImageUpdatedEvent?.Invoke(imageBase64);
 
     }

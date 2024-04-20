@@ -1,4 +1,6 @@
-﻿namespace DMCockpit
+﻿using Application = Microsoft.Maui.Controls.Application;
+
+namespace DMCockpit
 {
     public partial class App : Application
     {

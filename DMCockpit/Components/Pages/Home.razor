@@ -15,28 +15,41 @@
             </MudButton>
         </ButtonTemplate>
     </MudFileUpload>
+    @if (playerWindow != null && !String.IsNullOrEmpty(imageBase64))
+    {
+        <MudButton Variant="Variant.Filled" OnClick="UpdatePlayerWindow">Update Player View</MudButton>
+    }
 </MudButtonGroup>
 
 <br />
-<div class="draggable" id="mapViewPort">Over</div>
-
 @if (!String.IsNullOrEmpty(imageBase64))
 {
-    <div class="image-container">
-        <MudImage src="@imageBase64" ObjectFit="ObjectFit.ScaleDown" Height="900" Width="1600" />
+    <div class="image-container" id="mapView">
+        <MudImage class="control" id="controlMap" src="@imageBase64" Width="1600" Height="900" ObjectFit="ObjectFit.ScaleDown" ObjectPosition="ObjectPosition.LeftTop"/>
+        <div class="draggable" id="mapViewPort" style="top: 0; left: 0;" 
+        @onmouseleave="OnViewPortMouseUp" 
+        @onmousedown="OnViewPortMouseDown" 
+        @onmouseup="OnViewPortMouseUp" 
+        @onmousemove="OnViewPortMouseMove"
+        @onwheel="OnViewPortMouseMove"
+        @onmousewheel="OnViewPortMouseMove"></div>
     </div>
 }
 
 <style>
     .draggable {
         position: absolute;
-        top: 1rem;
-        left: 1rem;
-        width: 200px; /* Adjust the width and height as needed */
-        height: 200px;
-        border: 2px solid black; /* Border color and thickness */
+        width: 160px; /* Adjust the width and height as needed */
+        height: 90px;
         box-sizing: border-box; /* Include border in width and height */
         z-index: 999; /* Ensure it's above the image */
+        /* Create the black outer border */
+        outline: 2px solid white;
+        background-color: rgba(0, 0, 255, 0.5); /* Adjust the transparency by changing the last value (0.5) */
+    }
+
+    .control {
+        background-color: grey;
     }
 
     .image-container {

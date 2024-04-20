@@ -1,3 +1,6 @@
+using Microsoft.UI.Windowing;
+using Microsoft.UI;
+
 namespace DMCockpit.MAUI_Pages;
 
 public partial class PlayerViewPage : ContentPage
@@ -5,5 +8,5 @@ public partial class PlayerViewPage : ContentPage
 	public PlayerViewPage()
 	{
 		InitializeComponent();
-	}
+    }
 }
