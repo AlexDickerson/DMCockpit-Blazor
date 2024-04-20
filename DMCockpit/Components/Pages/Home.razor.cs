@@ -3,6 +3,7 @@ using DMCockpit.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Maui.Storage;
+using Microsoft.JSInterop;
 
 namespace DMCockpit.Components.Pages
 {
@@ -11,10 +12,20 @@ namespace DMCockpit.Components.Pages
         [Inject]
         private IDisplayManager DisplayManager { get; set; }
 
+        [Inject]
+        private IJSRuntime js { get; set; }
+
         Window? playerWindow = null;
+        private string imageBase64 = string.Empty;
 
         protected override void OnInitialized()
         {
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await js.InvokeVoidAsync("dragAndDrop", ".draggable");
+            await js.InvokeVoidAsync("resizeWithScroll", "mapViewPort");
         }
 
         private void NewPlayerWindow()
@@ -36,6 +47,8 @@ namespace DMCockpit.Components.Pages
             string base64String = Convert.ToBase64String(bytes);
 
             await DisplayManager.UpdateImageWithBase64(base64String);
+
+            this.imageBase64 = DisplayManager.GetControlImage();
         }
     }
 }

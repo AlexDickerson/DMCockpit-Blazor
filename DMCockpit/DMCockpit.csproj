@@ -67,6 +67,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Update="wwwroot\JSFolder\DragAndDrop.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\JSFolder\ResizeWithScroll.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
       <MauiXaml Update="MAUI Pages\PlayerViewPage.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
