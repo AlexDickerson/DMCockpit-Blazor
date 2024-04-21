@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using Microsoft.JSInterop;
+using MudBlazor;
 
 namespace DMCockpit.Components.PlayerView
 {
@@ -9,6 +11,9 @@ namespace DMCockpit.Components.PlayerView
     {
         [Inject]
         private IDisplayManager DisplayManager { get; set; }
+
+        [Inject]
+        private IJSRuntime js { get; set; }
 
         private string imageBase64 = string.Empty;
         private string overlayGridImageBase64 = string.Empty;
@@ -19,16 +24,43 @@ namespace DMCockpit.Components.PlayerView
         private bool gridVisible = true;
         private int gridThickness = 3;
 
-        protected override void OnInitialized()
+        private Coordinates[] coordinates = new Coordinates[2];
+
+        protected override async void OnInitialized()
         {
             DisplayManager.ImageUpdatedEvent += UpdateImage;
+            DisplayManager.CoordiantesUpdatedEvent += UpdateCoordinates;
             overlayGridImageBase64 = CreateOverlayGridImage();
+
+            coordinates[0] = new Coordinates { X = 0, Y = 0 };
+            coordinates[1] = new Coordinates { X = 1600, Y = 900 };
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                return;
+            }
+
+            await DrawImage(coordinates);
         }
 
         private void UpdateImage(string imageBase64)
         {
             this.imageBase64 = imageBase64;
             StateHasChanged();
+        }
+
+        private async void UpdateCoordinates(Coordinates[] coordinates)
+        {
+            await DrawImage(coordinates);
+        }
+
+        private async Task DrawImage(Coordinates[] coordinates)
+        {
+            string[] args = { "playerMap", "playerMapCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString() };
+            await js.InvokeVoidAsync("drawImageWithCoordinates", args);
         }
 
         private string CreateOverlayGridImage()

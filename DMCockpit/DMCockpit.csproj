@@ -68,13 +68,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="wwwroot\JSFolder\DragAndDrop.js">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Update="wwwroot\JSFolder\GetPositionByID.js">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Update="wwwroot\JSFolder\ResizeWithScroll.js">
+      <Content Update="wwwroot\JSFolder\DMCockpit.js">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

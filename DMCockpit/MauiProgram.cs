@@ -29,25 +29,6 @@ namespace DMCockpit
             builder.Services.RegisterDMCockpitServices();
             builder.Services.AddMudServices();
 
-            builder.ConfigureLifecycleEvents(events =>
-            {
-                events.AddWindows(windowsLifecycleBuilder =>
-                {
-                    windowsLifecycleBuilder.OnWindowCreated(window =>
-                    {
-                        window.ExtendsContentIntoTitleBar = false;
-                        
-                        IntPtr nativeWindow = WinRT.Interop.WindowNative.GetWindowHandle(window);
-                        WindowId win32WindowsId = Win32Interop.GetWindowIdFromWindow(nativeWindow);
-                        AppWindow winuiAppWindow = AppWindow.GetFromWindowId(win32WindowsId);
-                        if (winuiAppWindow.Presenter is OverlappedPresenter p)
-                        {
-                            p.SetBorderAndTitleBar(false, false);
-                        }
-                    });
-                });
-            });
-
             return builder.Build();
         }
 

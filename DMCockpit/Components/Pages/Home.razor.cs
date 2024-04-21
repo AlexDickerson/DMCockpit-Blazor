@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using Application = Microsoft.Maui.Controls.Application;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace DMCockpit.Components.Pages
 {
@@ -32,7 +33,6 @@ namespace DMCockpit.Components.Pages
         {
             await RegisterJavascript();
         }
-
 
         private async Task RegisterJavascript()
         {
@@ -94,14 +94,20 @@ namespace DMCockpit.Components.Pages
             await js.InvokeVoidAsync("resizeImage", "controlMap");
         }
 
-        private async Task OnViewPortMouseDown()
+        private async Task OnViewPortMouseDown(MouseEventArgs e)
         {
-            viewPortIsBeingDragged = true;
+            if (e.Button == 1)
+            {
+                viewPortIsBeingDragged = true;
+            }
         }
 
-        private async Task OnViewPortMouseUp()
+        private async Task OnViewPortMouseUp(MouseEventArgs e)
         {
-            viewPortIsBeingDragged = false;
+            if (e.Button == 1)
+            {
+                viewPortIsBeingDragged = false;
+            }
         }
 
         private int frameSkip = 3;

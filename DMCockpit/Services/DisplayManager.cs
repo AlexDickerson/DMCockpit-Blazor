@@ -14,6 +14,7 @@ namespace DMCockpit.Services
         string GetControlImage();
 
         event ImageUpdated ImageUpdatedEvent;
+        event CoordinatesUpdated CoordiantesUpdatedEvent;
     }
 
     public class Coordinates
@@ -22,13 +23,13 @@ namespace DMCockpit.Services
         public double Y { get; set; }
     }
 
-    public delegate void ImageUpdated(string imageBase64);
+    public delegate void ImageUpdated(string base64Image);
+    public delegate void CoordinatesUpdated(Coordinates[] coordinates);
 
     public class DisplayManager : IDisplayManager
     {
         public event ImageUpdated? ImageUpdatedEvent;
-
-        private Coordinates[] coordinates = new Coordinates[2];
+        public event CoordinatesUpdated? CoordiantesUpdatedEvent;
 
         private Image image;
 
@@ -59,10 +60,14 @@ namespace DMCockpit.Services
             return image.ToBase64String(PngFormat.Instance);
         }
 
+        private void UpdateCoordinates(Coordinates[] coordinates)
+        {
+            OnCoordinatesUpdated(coordinates);
+        }
+
         private void UpdateImage(Image image)
         {
-            var imageString = DrawSubsection(image, coordinates).ToBase64String(PngFormat.Instance);
-            OnImageUpdated(imageString);
+            OnImageUpdated(image.ToBase64String(PngFormat.Instance));
         }
 
         private Image DrawSubsection(Image image, Coordinates[] coordinates)
@@ -122,12 +127,11 @@ namespace DMCockpit.Services
 
         public void SetSubsection(Coordinates[] coordinates)
         {
-            this.coordinates = coordinates;
-
-            UpdateImage(image);
+            UpdateCoordinates(coordinates);
         }
 
-        protected virtual void OnImageUpdated(string imageBase64) => ImageUpdatedEvent?.Invoke(imageBase64);
+        protected virtual void OnCoordinatesUpdated(Coordinates[] coordinates) => CoordiantesUpdatedEvent?.Invoke(coordinates);
+        protected virtual void OnImageUpdated(string base64Image) => ImageUpdatedEvent?.Invoke(base64Image);
 
     }
 }

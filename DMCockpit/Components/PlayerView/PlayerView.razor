@@ -1,14 +1,10 @@
-﻿@using MudBlazor
-
-@if (!String.IsNullOrEmpty(imageBase64))
+﻿@if (!String.IsNullOrEmpty(imageBase64))
 {
-    <div style="position: relative; height: 100vh; overflow: hidden;">
-        <div style="display: flex; justify-content: center; background-color: black; height: 100%;">
-            <MudImage src="@imageBase64" class="myImage"/>
+    <div style="width: calc(100vh * 16 / 9 - 16px); height: calc(100vh - 9px); display: flex; justify-content: center; align-items: center;">
+        <div style="position: relative;">
+            <img src="@imageBase64" class="myImage" id="playerMap" style="display: none;" />
         </div>
 
-        <div style="position: fixed; top: 0; left: 0; z-index: 999;">
-            <MudImage src="@overlayGridImageBase64" />
-        </div>
+        <canvas id="playerMapCanvas" style="overflow: hidden; background-color: #000000;"></canvas>
     </div>
 }
