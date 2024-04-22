@@ -4,21 +4,36 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+<div class="appbar">
+    <MudAppBar Color="Color.Primary" Fixed="false" Dense=true>
+        <MudText Typo="Typo.h6" Class="px-4">DM Cockpit</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.MusicNote" OnClick="@(() => OpenDrawer(Anchor.End))"></MudIconButton>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/AlexDickerson/DMCockpit-Blazor" Color="Color.Inherit" />
+    </MudAppBar>
+</div>
 
-<div class="page" style="height:100%">
-    <MudPaper Width="250px" Class="py-3" Elevation="0">
+<MudDrawer @bind-Open="@open" Anchor="Anchor.End" Variant="@DrawerVariant.Temporary" Width="700px"> 
+    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+        <MudButton @onclick="ToggleSpotifyCombat">Combat</MudButton>
+        <MudButton @onclick="ToggleSpotifyDungeon">Dungeon</MudButton>
+        <MudButton @onclick="ToggleSpotifyCampfire">Campfire</MudButton>
+    </MudButtonGroup>
+
+    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/5OfeOCp481xOMkF4qBAdlW?utm_source=generator" hidden="@hideSpotifyCombat"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/3h7mjadevdr4tJFXVvH6Cu?utm_source=generator" hidden="@hideSpotifyDungeon"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/3nNhKHeLppJl9x7NpGf0l7?utm_source=generator" hidden="@hideSpotifyCampfire"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</MudDrawer>
+
+<div class="page" style="height: calc(100% - 52px); overflow: hidden;">
+    <MudPaper Width="250px" Class="dmcockpit-navbar" Elevation="0">
         <MudNavMenu>
-            <MudText Typo="Typo.h6" Class="px-4">My Application</MudText>
-            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Secondary Text</MudText>
-            <MudDivider Class="my-2" />
-            <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-            <MudNavLink Href="/servers">Servers</MudNavLink>
-            <MudNavLink Href="/billing" Disabled="true">Billing</MudNavLink>
-            <MudNavGroup Title="Settings" Expanded="true">
-                <MudNavLink Href="/users">Users</MudNavLink>
-                <MudNavLink Href="/security">Security</MudNavLink>
-            </MudNavGroup>
-            <MudNavLink Href="/about">About</MudNavLink>
+            <MudNavLink Href="/">Control</MudNavLink>
+            <MudNavLink Href="/">Settings</MudNavLink>
+            <MudNavLink Href="/">About</MudNavLink>
         </MudNavMenu>
     </MudPaper>
 
@@ -30,5 +45,19 @@
 <style>
     .cockpit-content {
         padding-left: 2px;
+        z-index: 50;
+    }
+
+    .dmcockpit-navbar {
+        border-right: 3px solid #e0e0e0;
+        height: 100%;
+    }
+
+    .spotify-iframe {
+
+    }
+
+    .appbar {
+        border-bottom: 3px solid #e0e0e0;
     }
 </style>

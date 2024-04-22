@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace DMCockpit.Components.Pages
 {
-    public partial class Home : ComponentBase
+    public partial class Control : ComponentBase
     {
         [Inject]
         private IDisplayManager DisplayManager { get; set; }
@@ -23,6 +23,7 @@ namespace DMCockpit.Components.Pages
         private bool javascriptRegistered = false;
 
         private bool viewPortIsBeingDragged = false;
+        private bool[] maskBitmap;
 
         protected override void OnInitialized()
         {
@@ -45,6 +46,10 @@ namespace DMCockpit.Components.Pages
 
                 args = ["mapViewPort", "controlMap"];
                 await js.InvokeVoidAsync("resizeWithScroll", args);
+
+                args = ["maskCanvas", "controlMap", "mapViewPort"];
+                await js.InvokeVoidAsync("drawableMaskCanvas", args);
+
                 javascriptRegistered = true;
             }
             catch
@@ -53,16 +58,23 @@ namespace DMCockpit.Components.Pages
         }
 
         private Coordinates[] previousPosition = new Coordinates[2];
-        private async void UpdatePlayerWindow()
+        private async Task UpdatePlayerWindow()
         {
             string[] args = ["mapViewPort", "controlMap"];
             var position = await js.InvokeAsync<Coordinates[]>("getPositionByID", args);
 
-            if (previousPosition[0] != null && previousPosition[1] != null &&
-                position[0].X == previousPosition[0].X && position[0].Y == previousPosition[0].Y &&
-                position[1].X == previousPosition[1].X && position[1].Y == previousPosition[1].Y)
+            //if (previousPosition[0] != null && previousPosition[1] != null &&
+            //    position[0].X == previousPosition[0].X && position[0].Y == previousPosition[0].Y &&
+            //    position[1].X == previousPosition[1].X && position[1].Y == previousPosition[1].Y)
+            //{
+            //    return;
+            //}
+
+            var maskBitmapTemp = await js.InvokeAsync<bool[]>("getCanvasBitmap", "maskCanvas");
+            if(maskBitmapTemp.Length > 0)
             {
-                return;
+                maskBitmap = maskBitmapTemp;
+                DisplayManager.SetMask(maskBitmap);
             }
 
             DisplayManager.SetSubsection(position);
@@ -94,9 +106,32 @@ namespace DMCockpit.Components.Pages
             await js.InvokeVoidAsync("resizeImage", "controlMap");
         }
 
+        private async Task OnCanvasMouseUp()
+        {
+            await UpdatePlayerWindow();
+        }
+
+        private async Task MoveViewPortalToTop(KeyboardEventArgs e)
+        {
+            if (e.ShiftKey)
+            {
+                string[] args = ["mapViewPort", "30"];
+                await js.InvokeVoidAsync("setZIndex", "mapViewPort");
+            }
+        }
+
+        private async Task MoveViewPortalToBottom(KeyboardEventArgs e)
+        {
+            if (e.ShiftKey)
+            {
+                string[] args = ["mapViewPort", "15"];
+                await js.InvokeVoidAsync("setZIndex", "mapViewPort");
+            }
+        }
+
         private async Task OnViewPortMouseDown(MouseEventArgs e)
         {
-            if (e.Button == 1)
+            if (e.ShiftKey)
             {
                 viewPortIsBeingDragged = true;
             }
@@ -104,10 +139,13 @@ namespace DMCockpit.Components.Pages
 
         private async Task OnViewPortMouseUp(MouseEventArgs e)
         {
-            if (e.Button == 1)
-            {
-                viewPortIsBeingDragged = false;
-            }
+            viewPortIsBeingDragged = false;
+            await UpdatePlayerWindow();
+        }
+
+        private async Task OnViewPortMouseLeave(MouseEventArgs e)
+        {
+            viewPortIsBeingDragged = false;
         }
 
         private int frameSkip = 3;

@@ -13,6 +13,11 @@
                     return;
                 }
 
+                //check if shift key is pressed
+                if (!event.shiftKey) {
+                    return;
+                }
+
                 position.x += event.dx;
                 position.y += event.dy;
 
@@ -171,4 +176,118 @@ function resizeWithScroll(elementID, restrictElementID) {
         // Prevent scrolling the window when within the bounds of the element
         return false;
     }
+}
+
+var maskHasChanged = false;
+var transparentPixels = [];
+var hasProvidedMask = false;
+
+function drawableMaskCanvas(canvasID, mapID, excludeElement) {
+    var canvasElement = document.getElementById(canvasID);
+    var mapElement = document.getElementById(mapID);
+    var excludeElement = document.getElementById(excludeElement);
+
+    var context = canvasElement.getContext("2d");
+    resize();
+
+    // last known position
+    var pos = { x: 0, y: 0 };
+
+    window.addEventListener('resize', resize);
+    document.addEventListener('mousemove', draw);
+    document.addEventListener('mousedown', setPosition);
+    document.addEventListener('mouseenter', setPosition);
+
+    // new position from mouse event
+    function setPosition(e) {
+        const canvasElement = document.getElementById(canvasID);
+        const canvasRect = canvasElement.getBoundingClientRect();
+
+        pos.x = e.clientX - canvasRect.left;
+        pos.y = e.clientY - canvasRect.top;
+    }
+
+    // resize canvas
+    function resize() {
+        context.canvas.width = mapElement.width;
+        context.canvas.height = mapElement.height;
+        context.fillStyle = 'rgba(32, 32, 32, 0.8)'; // Darker more opaque grey
+        context.fillRect(0, 0, canvasElement.width, canvasElement.height);
+    }
+
+    function draw(e) {
+        // mouse left button must be pressed
+        if (e.buttons !== 1) return;
+
+        //if mouse is over the excluded element, return
+        if (e.target === excludeElement && e.shiftKey) {
+            return;
+        }
+
+        context.globalCompositeOperation = 'destination-out'; // Erase
+        context.beginPath(); // begin
+
+        context.lineWidth = 30;
+        context.lineCap = 'round';
+        context.strokeStyle = 'rgba(0, 0, 0, 1)'; // Fully opaque black
+
+        context.moveTo(pos.x, pos.y); // from
+        setPosition(e);
+        context.lineTo(pos.x, pos.y); // to
+
+        context.stroke(); // draw it!
+
+        maskHasChanged = true;
+        hasProvidedMask = false;
+
+        context.globalCompositeOperation = 'source-over'; // Restore default
+    }
+}
+
+function getCanvasBitmap(canvasID) {
+    if (!maskHasChanged) {
+        if(hasProvidedMask){
+            return [];
+        }
+        return transparentPixels;
+    }
+
+    var canvasElement = document.getElementById(canvasID);
+
+    //return an array that indicates which pixels are transparent
+    var context = canvasElement.getContext("2d");
+    context.willReadFrequently = true;
+    var imageData = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
+    var data = imageData.data;
+    transparentPixels = [];
+
+    for (var i = 0; i < data.length; i += 4) {
+        if (data[i + 3] === 0) {
+            transparentPixels.push(true);
+        } else {
+            transparentPixels.push(false);
+        }
+    }
+
+    maskHasChanged = false;
+    hasProvidedMask = true;
+
+    return transparentPixels;
+}
+
+function overlayMaskCanvas(maskCanvasID, mapCanvasID) {
+    var maskCanvasElement = document.getElementById(maskCanvasID);
+    var mapCanvasElement = document.getElementById(mapCanvasID);
+
+    //position the mask canvas over the map canvas
+    maskCanvasElement.style.position = 'absolute';
+    maskCanvasElement.style.left = mapCanvasElement.offsetLeft + 'px';
+    maskCanvasElement.style.top = mapCanvasElement.offsetTop + 'px';
+
+    maskCanvasElement.width = mapCanvasElement.width;
+    maskCanvasElement.height = mapCanvasElement.height;
+}
+
+function addCookie(cookieName, cookieValue) {
+    document.cookie = cookieName + "=" + cookieValue + ";";
 }

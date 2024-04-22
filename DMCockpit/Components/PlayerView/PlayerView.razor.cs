@@ -17,6 +17,9 @@ namespace DMCockpit.Components.PlayerView
 
         private string imageBase64 = string.Empty;
         private string overlayGridImageBase64 = string.Empty;
+        private string maskBase64 = string.Empty;
+
+        private bool mapFirstRender = true;
 
         private int displayDiagonalInches = 22;
         private int displayResolutionX = 1920;
@@ -30,6 +33,7 @@ namespace DMCockpit.Components.PlayerView
         {
             DisplayManager.ImageUpdatedEvent += UpdateImage;
             DisplayManager.CoordiantesUpdatedEvent += UpdateCoordinates;
+            DisplayManager.MaskUpdatedEvent += UpdateMask;
             overlayGridImageBase64 = CreateOverlayGridImage();
 
             coordinates[0] = new Coordinates { X = 0, Y = 0 };
@@ -43,12 +47,25 @@ namespace DMCockpit.Components.PlayerView
                 return;
             }
 
-            await DrawImage(coordinates);
+            if (mapFirstRender)
+            {
+                await DrawImage(coordinates);
+                mapFirstRender = false;
+
+                string[] args = ["maskCanvas", "playerMapCanvas"];
+                await js.InvokeVoidAsync("overlayMaskCanvas", args);
+            }
         }
 
         private void UpdateImage(string imageBase64)
         {
             this.imageBase64 = imageBase64;
+            StateHasChanged();
+        }
+
+        private void UpdateMask(string maskBase64)
+        {
+            this.maskBase64 = maskBase64;
             StateHasChanged();
         }
 
@@ -61,6 +78,9 @@ namespace DMCockpit.Components.PlayerView
         {
             string[] args = { "playerMap", "playerMapCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString() };
             await js.InvokeVoidAsync("drawImageWithCoordinates", args);
+
+            string[] maskArgs = { "maskImage", "maskCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString() };
+            await js.InvokeVoidAsync("drawImageWithCoordinates", maskArgs);
         }
 
         private string CreateOverlayGridImage()

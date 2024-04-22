@@ -1,8 +1,5 @@
 ﻿using DMCockpit.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.LifecycleEvents;
-using Microsoft.UI.Windowing;
-using Microsoft.UI;
 using MudBlazor.Services;
 
 namespace DMCockpit
