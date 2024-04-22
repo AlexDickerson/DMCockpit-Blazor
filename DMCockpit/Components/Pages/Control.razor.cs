@@ -3,8 +3,6 @@ using DMCockpit.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using Microsoft.UI.Windowing;
-using Microsoft.UI;
 using Application = Microsoft.Maui.Controls.Application;
 using Microsoft.AspNetCore.Components.Web;
 
