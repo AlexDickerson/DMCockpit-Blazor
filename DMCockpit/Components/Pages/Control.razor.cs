@@ -3,29 +3,29 @@ using DMCockpit.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using Application = Microsoft.Maui.Controls.Application;
 using Microsoft.AspNetCore.Components.Web;
+using Application = Microsoft.Maui.Controls.Application;
 
 namespace DMCockpit.Components.Pages
 {
     public partial class Control : ComponentBase
     {
         [Inject]
-        private IDisplayManager DisplayManager { get; set; }
+        private IDisplayManager DisplayManager { get; set; } = null!;
 
         [Inject]
-        private IJSRuntime js { get; set; }
+        private IJSRuntime Js { get; set; } = null!;
 
         Window? playerWindow = null;
         private string imageBase64 = string.Empty;
         private bool javascriptRegistered = false;
 
         private bool viewPortIsBeingDragged = false;
-        private bool[] maskBitmap;
+        private bool[]? maskBitmap;
 
         protected override void OnInitialized()
         {
-            
+
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,13 +40,13 @@ namespace DMCockpit.Components.Pages
             try
             {
                 string[] args = [".draggable", "controlMap"];
-                await js.InvokeVoidAsync("dragAndDrop", args);
+                await Js.InvokeVoidAsync("dragAndDrop", args);
 
                 args = ["mapViewPort", "controlMap"];
-                await js.InvokeVoidAsync("resizeWithScroll", args);
+                await Js.InvokeVoidAsync("resizeWithScroll", args);
 
                 args = ["maskCanvas", "controlMap", "mapViewPort"];
-                await js.InvokeVoidAsync("drawableMaskCanvas", args);
+                await Js.InvokeVoidAsync("drawableMaskCanvas", args);
 
                 javascriptRegistered = true;
             }
@@ -55,40 +55,34 @@ namespace DMCockpit.Components.Pages
             }
         }
 
-        private Coordinates[] previousPosition = new Coordinates[2];
         private async Task UpdatePlayerWindow()
         {
             string[] args = ["mapViewPort", "controlMap"];
-            var position = await js.InvokeAsync<Coordinates[]>("getPositionByID", args);
+            var position = await Js.InvokeAsync<Coordinates[]>("getPositionByID", args);
 
-            //if (previousPosition[0] != null && previousPosition[1] != null &&
-            //    position[0].X == previousPosition[0].X && position[0].Y == previousPosition[0].Y &&
-            //    position[1].X == previousPosition[1].X && position[1].Y == previousPosition[1].Y)
-            //{
-            //    return;
-            //}
 
-            var maskBitmapTemp = await js.InvokeAsync<bool[]>("getCanvasBitmap", "maskCanvas");
-            if(maskBitmapTemp.Length > 0)
+            var maskBitmapTemp = await Js.InvokeAsync<bool[]>("getCanvasBitmap", "maskCanvas");
+            if (maskBitmapTemp.Length > 0)
             {
                 maskBitmap = maskBitmapTemp;
                 DisplayManager.SetMask(maskBitmap);
             }
 
             DisplayManager.SetSubsection(position);
-
-            previousPosition = position;
         }
 
         private void NewPlayerWindow()
         {
             var page = new PlayerViewPage();
 
-            Window window = new(page);
-            window.Title = "";
-            window.X = 0;
+            Window window = new(page)
+            {
+                Title = "",
+                X = 0
+            };
 
-            Application.Current.OpenWindow(window);
+            var currentApp = Application.Current ?? throw new NullReferenceException("Application.Current is null. How?");
+            currentApp.OpenWindow(window);
 
             playerWindow = window;
         }
@@ -101,7 +95,7 @@ namespace DMCockpit.Components.Pages
 
             StateHasChanged();
 
-            await js.InvokeVoidAsync("resizeImage", "controlMap");
+            await Js.InvokeVoidAsync("resizeImage", "controlMap");
         }
 
         private async Task OnCanvasMouseUp()
@@ -109,25 +103,7 @@ namespace DMCockpit.Components.Pages
             await UpdatePlayerWindow();
         }
 
-        private async Task MoveViewPortalToTop(KeyboardEventArgs e)
-        {
-            if (e.ShiftKey)
-            {
-                string[] args = ["mapViewPort", "30"];
-                await js.InvokeVoidAsync("setZIndex", "mapViewPort");
-            }
-        }
-
-        private async Task MoveViewPortalToBottom(KeyboardEventArgs e)
-        {
-            if (e.ShiftKey)
-            {
-                string[] args = ["mapViewPort", "15"];
-                await js.InvokeVoidAsync("setZIndex", "mapViewPort");
-            }
-        }
-
-        private async Task OnViewPortMouseDown(MouseEventArgs e)
+        private void OnViewPortMouseDown(MouseEventArgs e)
         {
             if (e.ShiftKey)
             {
@@ -141,18 +117,18 @@ namespace DMCockpit.Components.Pages
             await UpdatePlayerWindow();
         }
 
-        private async Task OnViewPortMouseLeave(MouseEventArgs e)
+        private void OnViewPortMouseLeave(MouseEventArgs e)
         {
             viewPortIsBeingDragged = false;
         }
 
-        private int frameSkip = 3;
+        private readonly int frameSkip = 3;
         private int frame = 1;
         private async Task OnViewPortMouseMove()
         {
             if (viewPortIsBeingDragged && frame % frameSkip == 0)
             {
-                UpdatePlayerWindow();
+                await UpdatePlayerWindow();
                 frame = 1;
             }
             frame++;

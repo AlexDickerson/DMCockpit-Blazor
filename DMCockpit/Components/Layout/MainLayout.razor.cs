@@ -1,6 +1,4 @@
-﻿using BlazorBootstrap;
-using DMCockpit.MAUI_Pages;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 
@@ -9,20 +7,11 @@ namespace DMCockpit.Components.Layout
     public partial class MainLayout : LayoutComponentBase
     {
         [Inject]
-        private IJSRuntime js { get; set; }
-
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private IJSRuntime Js { get; set; } = null!;
 
         private bool hideSpotifyCombat = true;
         private bool hideSpotifyDungeon = true;
         private bool hideSpotifyCampfire = true;
-
-        private Offcanvas offcanvas = default!;
-
-        private async Task OnShowOffcanvasClick() => await offcanvas.ShowAsync();
-
-        private async Task OnHideOffcanvasClick() => await offcanvas.HideAsync();
 
         private void ToggleSpotifyCombat()
         {
@@ -44,12 +33,9 @@ namespace DMCockpit.Components.Layout
         }
 
         bool open;
-        Anchor anchor;
-
-        void OpenDrawer(Anchor anchor)
+        void OpenDrawer()
         {
             open = true;
-            this.anchor = anchor;
         }
     }
 }

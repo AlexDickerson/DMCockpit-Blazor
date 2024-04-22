@@ -3,17 +3,16 @@ using Microsoft.AspNetCore.Components;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using Microsoft.JSInterop;
-using MudBlazor;
 
 namespace DMCockpit.Components.PlayerView
 {
     public partial class PlayerView : ComponentBase
     {
         [Inject]
-        private IDisplayManager DisplayManager { get; set; }
+        private IDisplayManager DisplayManager { get; set; } = default!;
 
         [Inject]
-        private IJSRuntime js { get; set; }
+        private IJSRuntime Js { get; set; } = default!;
 
         private string imageBase64 = string.Empty;
         private string overlayGridImageBase64 = string.Empty;
@@ -21,15 +20,15 @@ namespace DMCockpit.Components.PlayerView
 
         private bool mapFirstRender = true;
 
-        private int displayDiagonalInches = 22;
-        private int displayResolutionX = 1920;
-        private int displayResolutionY = 1080;
-        private bool gridVisible = true;
-        private int gridThickness = 3;
+        private readonly int displayDiagonalInches = 22;
+        private readonly int displayResolutionX = 1920;
+        private readonly int displayResolutionY = 1080;
+        private readonly bool gridVisible = true;
+        private readonly int gridThickness = 3;
 
-        private Coordinates[] coordinates = new Coordinates[2];
+        private readonly Coordinates[] coordinates = new Coordinates[2];
 
-        protected override async void OnInitialized()
+        protected override void OnInitialized()
         {
             DisplayManager.ImageUpdatedEvent += UpdateImage;
             DisplayManager.CoordiantesUpdatedEvent += UpdateCoordinates;
@@ -42,7 +41,7 @@ namespace DMCockpit.Components.PlayerView
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if(firstRender)
+            if (firstRender)
             {
                 return;
             }
@@ -53,7 +52,7 @@ namespace DMCockpit.Components.PlayerView
                 mapFirstRender = false;
 
                 string[] args = ["maskCanvas", "playerMapCanvas"];
-                await js.InvokeVoidAsync("overlayMaskCanvas", args);
+                await Js.InvokeVoidAsync("overlayMaskCanvas", args);
             }
         }
 
@@ -76,11 +75,11 @@ namespace DMCockpit.Components.PlayerView
 
         private async Task DrawImage(Coordinates[] coordinates)
         {
-            string[] args = { "playerMap", "playerMapCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString() };
-            await js.InvokeVoidAsync("drawImageWithCoordinates", args);
+            string[] args = ["playerMap", "playerMapCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString()];
+            await Js.InvokeVoidAsync("drawImageWithCoordinates", args);
 
-            string[] maskArgs = { "maskImage", "maskCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString() };
-            await js.InvokeVoidAsync("drawImageWithCoordinates", maskArgs);
+            string[] maskArgs = ["maskImage", "maskCanvas", coordinates[0].X.ToString(), coordinates[0].Y.ToString(), coordinates[1].X.ToString(), coordinates[1].Y.ToString()];
+            await Js.InvokeVoidAsync("drawImageWithCoordinates", maskArgs);
         }
 
         private string CreateOverlayGridImage()
@@ -92,17 +91,15 @@ namespace DMCockpit.Components.PlayerView
             using (Graphics g = Graphics.FromImage(overlayImage))
             {
                 g.Clear(System.Drawing.Color.Transparent);
-                using (Pen pen = new Pen(System.Drawing.Color.Black, gridThickness))
+                using Pen pen = new(System.Drawing.Color.Black, gridThickness);
+                pen.DashStyle = DashStyle.Dash;
+                for (int i = 1; i < verticalInches; i++)
                 {
-                    pen.DashStyle = DashStyle.Dash;
-                    for (int i = 1; i < verticalInches; i++)
-                    {
-                        g.DrawLine(pen, 0, i * ppi, displayResolutionX, i * ppi);
-                    }
-                    for (int i = 1; i < horizontalInches; i++)
-                    {
-                        g.DrawLine(pen, i * ppi, 0, i * ppi, displayResolutionY);
-                    }
+                    g.DrawLine(pen, 0, i * ppi, displayResolutionX, i * ppi);
+                }
+                for (int i = 1; i < horizontalInches; i++)
+                {
+                    g.DrawLine(pen, i * ppi, 0, i * ppi, displayResolutionY);
                 }
             }
 
@@ -115,11 +112,9 @@ namespace DMCockpit.Components.PlayerView
 
         private static byte[] BitmapToBytes(Bitmap img)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
-            }
+            using MemoryStream stream = new();
+            img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+            return stream.ToArray();
         }
     }
 }
