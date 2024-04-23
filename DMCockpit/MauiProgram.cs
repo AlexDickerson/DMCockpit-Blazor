@@ -1,5 +1,6 @@
 ﻿using DMCockpit.Services;
 using DMCockpit_Library.Javascript_Interop;
+using DMCockpit_Library.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using MudBlazor.Services;
@@ -60,6 +61,7 @@ namespace DMCockpit
         {
             services.AddSingleton<IDisplayManager, DisplayManager>();
             services.AddTransient<IDMCockpitInterop, DMCockpitInterop>();
+            services.AddTransient<IMiniTracking, MiniTracking>();
         }
     }
 }

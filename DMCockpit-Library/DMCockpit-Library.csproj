@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.8.1.5350" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.8.1.5350" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.20" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
   </ItemGroup>
