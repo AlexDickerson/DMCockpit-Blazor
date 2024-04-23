@@ -1,4 +1,4 @@
-namespace DMCockpit.MAUI_Pages;
+namespace DMCockpit.XAML_Pages;
 
 public partial class PlayerViewPage : ContentPage
 {

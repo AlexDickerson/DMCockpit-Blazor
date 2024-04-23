@@ -6,36 +6,23 @@ namespace DMCockpit.Components.Layout
 {
     public partial class MainLayout : LayoutComponentBase
     {
-        [Inject]
-        private IJSRuntime Js { get; set; } = null!;
+        SpotifyDrawer spotifyDrawer;
+        AONDrawer aonDrawer;
+        NameGeneratorDrawer nameGeneratorDrawer;
 
-        private bool hideSpotifyCombat = true;
-        private bool hideSpotifyDungeon = true;
-        private bool hideSpotifyCampfire = true;
-
-        private void ToggleSpotifyCombat()
+        private void OpenSpotifyDrawer()
         {
-            hideSpotifyCampfire = true;
-            hideSpotifyDungeon = true;
-            hideSpotifyCombat = false;
-        }
-        private void ToggleSpotifyDungeon()
-        {
-            hideSpotifyCampfire = true;
-            hideSpotifyCombat = true;
-            hideSpotifyDungeon = false;
-        }
-        private void ToggleSpotifyCampfire()
-        {
-            hideSpotifyCombat = true;
-            hideSpotifyDungeon = true;
-            hideSpotifyCampfire = false;
+            spotifyDrawer.OpenDrawer();
         }
 
-        bool open;
-        void OpenDrawer()
+        private void OpenAONDrawer()
         {
-            open = true;
+            aonDrawer.OpenDrawer();
+        }
+
+        private void OpenNameGeneratorDrawer()
+        {
+            nameGeneratorDrawer.OpenDrawer();
         }
     }
 }

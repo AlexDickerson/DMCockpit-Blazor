@@ -1,5 +1,7 @@
 ﻿using DMCockpit.Services;
+using DMCockpit_Library.Javascript_Interop;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using MudBlazor.Services;
 
 namespace DMCockpit
@@ -8,6 +10,8 @@ namespace DMCockpit
     {
         public static MauiApp CreateMauiApp()
         {
+            Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-web-security --user-data-dir=~/chromeTemp");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -17,6 +21,29 @@ namespace DMCockpit
                 });
 
             builder.Services.AddMauiBlazorWebView();
+
+            builder.ConfigureLifecycleEvents(events =>
+            {
+                // Make sure to add "using Microsoft.Maui.LifecycleEvents;" in the top of the file 
+                events.AddWindows(windowsLifecycleBuilder =>
+                {
+                    windowsLifecycleBuilder.OnWindowCreated(window =>
+                    {
+                        window.ExtendsContentIntoTitleBar = false;
+                        if (window.Title != "PlayerView") return;
+                        var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                        var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
+                        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
+                        switch (appWindow.Presenter)
+                        {
+                            case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                                overlappedPresenter.SetBorderAndTitleBar(false, false);
+                                overlappedPresenter.Maximize();
+                                break;
+                        }
+                    });
+                });
+            });
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
@@ -32,6 +59,7 @@ namespace DMCockpit
         private static void RegisterDMCockpitServices(this IServiceCollection services)
         {
             services.AddSingleton<IDisplayManager, DisplayManager>();
+            services.AddTransient<IDMCockpitInterop, DMCockpitInterop>();
         }
     }
 }

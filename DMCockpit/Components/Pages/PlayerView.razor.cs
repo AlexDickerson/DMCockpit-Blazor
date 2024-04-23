@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing;
 using Microsoft.JSInterop;
 
-namespace DMCockpit.Components.PlayerView
+namespace DMCockpit.Components.Pages
 {
     public partial class PlayerView : ComponentBase
     {

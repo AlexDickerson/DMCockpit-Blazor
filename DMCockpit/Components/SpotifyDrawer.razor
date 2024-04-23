@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+
+<MudDrawer @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary" Width="450px" Height="450px">
+    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+        @foreach (var playList in playlistDictionary)
+        {
+            <MudButton @onclick="() => TogglePlayList(playList.Key)">@playList.Key</MudButton>
+        }
+    </MudButtonGroup>
+
+    @foreach (var playList in playlistDictionary)
+    {
+        <iframe class="spotify-iframe" src="@playlistDictionary[playList.Key]" hidden="@playlistHidden[playList.Key]"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    }
+</MudDrawer>

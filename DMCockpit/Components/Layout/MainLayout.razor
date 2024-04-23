@@ -8,25 +8,9 @@
     <MudAppBar Color="Color.Primary" Fixed="false" Dense=true>
         <MudText Typo="Typo.h6" Class="px-4">DM Cockpit</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MusicNote" OnClick="@(() => OpenDrawer())"></MudIconButton>
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/AlexDickerson/DMCockpit-Blazor" Color="Color.Inherit" />
     </MudAppBar>
 </div>
-
-<MudDrawer @bind-Open="@open" Anchor="Anchor.End" Variant="@DrawerVariant.Temporary" Width="700px"> 
-    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-        <MudButton @onclick="ToggleSpotifyCombat">Combat</MudButton>
-        <MudButton @onclick="ToggleSpotifyDungeon">Dungeon</MudButton>
-        <MudButton @onclick="ToggleSpotifyCampfire">Campfire</MudButton>
-    </MudButtonGroup>
-
-    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/5OfeOCp481xOMkF4qBAdlW?utm_source=generator" hidden="@hideSpotifyCombat"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/3h7mjadevdr4tJFXVvH6Cu?utm_source=generator" hidden="@hideSpotifyDungeon"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    <iframe class="spotify-iframe" src="https://open.spotify.com/embed/playlist/3nNhKHeLppJl9x7NpGf0l7?utm_source=generator" hidden="@hideSpotifyCampfire"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</MudDrawer>
 
 <div class="page" style="height: calc(100% - 52px); overflow: hidden;">
     <MudPaper Width="250px" Class="dmcockpit-navbar" Elevation="0">
@@ -40,24 +24,16 @@
     <main class="cockpit-content">
         @Body
     </main>
+
+    <MudPaper Width="50px" Class="dmcockpit-navbar" Elevation="0">
+        <MudButtonGroup VerticalAlign="true">
+            <MudIconButton Icon="@Icons.Material.Filled.MusicNote" OnClick="@OpenSpotifyDrawer"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.LibraryBooks" OnClick="@OpenAONDrawer"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Person" OnClick="@OpenNameGeneratorDrawer"></MudIconButton>
+        </MudButtonGroup>
+    </MudPaper>
+
+    <SpotifyDrawer @ref="spotifyDrawer" />
+    <AONDrawer @ref="aonDrawer" />
+    <NameGeneratorDrawer @ref="nameGeneratorDrawer" />
 </div>
-
-<style>
-    .cockpit-content {
-        padding-left: 2px;
-        z-index: 50;
-    }
-
-    .dmcockpit-navbar {
-        border-right: 3px solid #e0e0e0;
-        height: 100%;
-    }
-
-    .spotify-iframe {
-
-    }
-
-    .appbar {
-        border-bottom: 3px solid #e0e0e0;
-    }
-</style>

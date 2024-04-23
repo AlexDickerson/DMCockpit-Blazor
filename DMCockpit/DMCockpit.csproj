@@ -33,7 +33,7 @@
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     </PropertyGroup>
-
+  
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -61,9 +61,9 @@
 
     <ItemGroup>
         <PackageReference Include="Blazor.Bootstrap" Version="2.2.1" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.20" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="MudBlazor" Version="6.19.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
@@ -71,24 +71,47 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="MAUI Pages\PlayerViewPage.xaml.cs">
+      <ProjectReference Include="..\DMCockpit-Library\DMCockpit-Library.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="XAML Pages\PlayerViewPage.xaml.cs">
         <DependentUpon>PlayerViewPage.xaml</DependentUpon>
       </Compile>
+      <Compile Update="XAML Pages\DndBeyond.xaml.cs">
+        <DependentUpon>DndBeyond.xaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="XAML Pages\PlayerViewPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+      <MauiXaml Update="XAML Pages\DndBeyond.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+      <MauiXaml Update="XAML Pages\Spotify.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="C:\Users\aldicke\.nuget\packages\microsoft.windowsappsdk\1.5.240311000\buildTransitive\..\include\DeploymentManagerAutoInitializer.cs" Link="Platforms\DeploymentManagerAutoInitializer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="C:\Users\aldicke\.nuget\packages\microsoft.windowsappsdk\1.5.240311000\buildTransitive\..\include\WindowsAppSDK-VersionInfo.cs" Link="Resources\WindowsAppSDK-VersionInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="NewFolder\" />
+      <Folder Include="wwwroot\JSFolder\" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Update="wwwroot\JSFolder\DMCockpit.js">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <MauiXaml Update="MAUI Pages\PlayerViewPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
-      <MauiXaml Update="Spotify.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
     </ItemGroup>
 
 </Project>

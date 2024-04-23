@@ -1,10 +1,10 @@
-﻿using DMCockpit.MAUI_Pages;
+﻿using DMCockpit.XAML_Pages;
 using DMCockpit.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components.Web;
 using Application = Microsoft.Maui.Controls.Application;
+using DMCockpit_Library.Javascript_Interop;
 
 namespace DMCockpit.Components.Pages
 {
@@ -14,7 +14,7 @@ namespace DMCockpit.Components.Pages
         private IDisplayManager DisplayManager { get; set; } = null!;
 
         [Inject]
-        private IJSRuntime Js { get; set; } = null!;
+        private IDMCockpitInterop DMCockpitInterop { get; set; } = null!;
 
         Window? playerWindow = null;
         private string imageBase64 = string.Empty;
@@ -39,14 +39,9 @@ namespace DMCockpit.Components.Pages
 
             try
             {
-                string[] args = [".draggable", "controlMap"];
-                await Js.InvokeVoidAsync("dragAndDrop", args);
-
-                args = ["mapViewPort", "controlMap"];
-                await Js.InvokeVoidAsync("resizeWithScroll", args);
-
-                args = ["maskCanvas", "controlMap", "mapViewPort"];
-                await Js.InvokeVoidAsync("drawableMaskCanvas", args);
+                await DMCockpitInterop.MakeElementDraggable(".draggable", "controlMap");
+                await DMCockpitInterop.ResizeWithScroll("mapViewPort", "controlMap");   
+                await DMCockpitInterop.CreateDrawableCanvas("maskCanvas", "controlMap", "mapViewPort");
 
                 javascriptRegistered = true;
             }
@@ -57,11 +52,8 @@ namespace DMCockpit.Components.Pages
 
         private async Task UpdatePlayerWindow()
         {
-            string[] args = ["mapViewPort", "controlMap"];
-            var position = await Js.InvokeAsync<Coordinates[]>("getPositionByID", args);
-
-
-            var maskBitmapTemp = await Js.InvokeAsync<bool[]>("getCanvasBitmap", "maskCanvas");
+            var position = await DMCockpitInterop.GetViewPortPositionOnMap("mapViewPort", "controlMap");
+            var maskBitmapTemp = await DMCockpitInterop.GetCanvasBitmap("maskCanvas");
             if (maskBitmapTemp.Length > 0)
             {
                 maskBitmap = maskBitmapTemp;
@@ -77,8 +69,8 @@ namespace DMCockpit.Components.Pages
 
             Window window = new(page)
             {
-                Title = "",
-                X = 0
+                Title = "PlayerView",
+                X = 2000
             };
 
             var currentApp = Application.Current ?? throw new NullReferenceException("Application.Current is null. How?");
@@ -95,7 +87,7 @@ namespace DMCockpit.Components.Pages
 
             StateHasChanged();
 
-            await Js.InvokeVoidAsync("resizeImage", "controlMap");
+            await DMCockpitInterop.ResizeImage("controlMap");
         }
 
         private async Task OnCanvasMouseUp()

@@ -1,6 +1,6 @@
 ﻿@if (!String.IsNullOrEmpty(imageBase64))
 {
-    <div style="width: calc(100vh * 16 / 9 - 16px); height: calc(100vh - 9px); display: flex; justify-content: center; align-items: center; margin: auto;">
+    <div style="width: calc(100vh * 16 / 9); height: calc(100vh); display: flex; justify-content: center; align-items: center; margin: auto;">
         <div style="position: relative;">
             <img src="@imageBase64" class="myImage" id="playerMap" style="display: none;" />
             <img src="@maskBase64" id="maskImage" style="display: none" />

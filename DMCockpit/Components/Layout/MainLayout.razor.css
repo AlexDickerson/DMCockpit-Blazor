@@ -75,3 +75,17 @@ main {
         padding-right: 1.5rem !important;
     }
 }
+
+.cockpit-content {
+    padding-left: 2px;
+    z-index: 50;
+}
+
+.dmcockpit-navbar {
+    border-right: 3px solid #e0e0e0;
+    height: 100%;
+}
+
+.appbar {
+    border-bottom: 3px solid #e0e0e0;
+}

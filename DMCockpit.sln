@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMCockpit", "DMCockpit\DMCockpit.csproj", "{2CBD22FB-3BB7-41DD-80FF-957EF5347931}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMCockpit-Library", "DMCockpit-Library\DMCockpit-Library.csproj", "{A2DEDFC0-BC6E-44A4-80E6-0D63A2FD2FAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{2CBD22FB-3BB7-41DD-80FF-957EF5347931}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CBD22FB-3BB7-41DD-80FF-957EF5347931}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CBD22FB-3BB7-41DD-80FF-957EF5347931}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A2DEDFC0-BC6E-44A4-80E6-0D63A2FD2FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DEDFC0-BC6E-44A4-80E6-0D63A2FD2FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DEDFC0-BC6E-44A4-80E6-0D63A2FD2FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DEDFC0-BC6E-44A4-80E6-0D63A2FD2FAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
