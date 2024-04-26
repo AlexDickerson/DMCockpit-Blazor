@@ -1,27 +1,31 @@
 ﻿@using MudBlazor
 
 @page "/"
+ 
+<MudPaper Elevation="25" Width="100%">
+    <MudToolBar>
+        <MudButton Variant="Variant.Filled" OnClick="NewPlayerWindow" hidden="@(playerWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>Player Window</MudButton>
 
-<MudButtonGroup Color="Color.Primary" Variant="Variant.Text">
-    <MudButton Variant="Variant.Filled" OnClick="NewPlayerWindow" hidden="@(playerWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>Player Window</MudButton>
-
-    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Style="margin-top:0px !important">
-        <ButtonTemplate>
-            <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       for="@context.Id">
-                Select Map
-            </MudButton>
-        </ButtonTemplate>
-    </MudFileUpload>
-</MudButtonGroup>
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Style="margin-top:0px !important">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           for="@context.Id">
+                    Select Map
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>        
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Outlined.Notifications" />
+    </MudToolBar>
+</MudPaper>
 
 <br />
 @if (!String.IsNullOrEmpty(imageBase64))
 {
     <div class="image-container" id="mapView">
-        <MudImage class="control" id="controlMap" src="@imageBase64" Width="1600" Height="900" ObjectFit="ObjectFit.ScaleDown" ObjectPosition="ObjectPosition.LeftTop" />
+        <MudImage class="control" id="controlMap" src="@imageBase64" Width="1600" Height="900" ObjectFit="ObjectFit.ScaleDown" ObjectPosition="ObjectPosition.Center" />
         <div class="draggable" id="mapViewPort" style="top: 0; left: 0;"
              @onmouseleave="OnViewPortMouseLeave"
              @onmousedown="OnViewPortMouseDown"

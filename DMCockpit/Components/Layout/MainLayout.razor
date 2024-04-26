@@ -8,6 +8,7 @@
     <MudAppBar Color="Color.Primary" Fixed="false" Dense=true>
         <MudText Typo="Typo.h6" Class="px-4">DM Cockpit</MudText>
         <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Settings" @onclick="OpenSettingsDrawer" Color="Color.Inherit" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/AlexDickerson/DMCockpit-Blazor" Color="Color.Inherit" />
     </MudAppBar>
 </div>
@@ -22,12 +23,17 @@
     <MudPaper Width="50px" Class="dmcockpit-navbar" Elevation="0">
         <MudButtonGroup VerticalAlign="true">
             <MudIconButton Icon="@Icons.Material.Filled.MusicNote" OnClick="@OpenSpotifyDrawer"></MudIconButton>
-            <MudIconButton Icon="@Icons.Material.Filled.LibraryBooks" OnClick="@OpenAONDrawer"></MudIconButton>
-            <MudIconButton Icon="@Icons.Material.Filled.Person" OnClick="@OpenNameGeneratorDrawer"></MudIconButton>
+            @foreach(var iframe in SettingsManager.IFrames)
+            {
+                <MudIconButton Icon="@iframe.Value.Item2" OnClick="@(() => OpenIFrameDrawer(iframe.Key))"></MudIconButton>
+            }
         </MudButtonGroup>
     </MudPaper>
 
     <SpotifyDrawer @ref="spotifyDrawer" />
-    <AONDrawer @ref="aonDrawer" />
-    <NameGeneratorDrawer @ref="nameGeneratorDrawer" />
+
+    @foreach (var iframe in SettingsManager.IFrames)
+    {
+        <IFrameDrawer @ref="iframeDrawerElements[iframe.Key]" URL="@iframe.Value.Item1" />
+    }
 </div>

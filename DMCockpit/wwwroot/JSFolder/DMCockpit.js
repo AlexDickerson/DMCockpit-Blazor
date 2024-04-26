@@ -291,3 +291,31 @@ function overlayMaskCanvas(maskCanvasID, mapCanvasID) {
 function addCookie(cookieName, cookieValue) {
     document.cookie = cookieName + "=" + cookieValue + ";";
 }
+
+window.JsFunctions = {
+    addKeyboardListenerEvent: function (foo) {
+        let serializeEvent = function (e) {
+            if (e) {
+                return {
+                    key: e.key,
+                    code: e.keyCode.toString(),
+                    location: e.location,
+                    repeat: e.repeat,
+                    ctrlKey: e.ctrlKey,
+                    shiftKey: e.shiftKey,
+                    altKey: e.altKey,
+                    metaKey: e.metaKey,
+                    type: e.type
+                };
+            }
+        };
+
+        window.document.addEventListener('keydown', function (e) {
+            // Check if Shift, Ctrl, or Alt is pressed along with another key
+            if ((e.shiftKey || e.ctrlKey || e.altKey) && e.key !== "Shift" && e.key !== "Control" && e.key !== "Alt") {
+                e.preventDefault();
+                DotNet.invokeMethodAsync('DMCockpit', 'JsKeyDown', serializeEvent(e));
+            }
+        });
+    }
+};

@@ -61,7 +61,9 @@ namespace DMCockpit
         {
             services.AddSingleton<IDisplayManager, DisplayManager>();
             services.AddTransient<IDMCockpitInterop, DMCockpitInterop>();
-            services.AddTransient<IMiniTracking, MiniTracking>();
+            services.AddSingleton<IMiniTracking, MiniTracking>();
+            services.AddSingleton<IHotKeyObersevable, HotKeyHandler>();
+            services.AddSingleton<ISettingsManager, SettingsManager>();
         }
     }
 }
