@@ -1,7 +1,7 @@
-﻿@using MudBlazor
+﻿﻿@using MudBlazor
 
 @page "/"
- 
+
 <MudPaper Elevation="25" Width="100%">
     <MudToolBar>
         <MudButton Variant="Variant.Filled" OnClick="NewPlayerWindow" hidden="@(playerWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>Player Window</MudButton>
@@ -17,7 +17,7 @@
                     Select Map
                 </MudButton>
             </ButtonTemplate>
-        </MudFileUpload>        
+        </MudFileUpload>
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Outlined.Notifications" />
     </MudToolBar>

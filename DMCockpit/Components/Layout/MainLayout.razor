@@ -1,4 +1,4 @@
-﻿@using MudBlazor
+﻿﻿@using MudBlazor
 @inherits LayoutComponentBase
 <MudThemeProvider IsDarkMode=true />
 <MudDialogProvider />
@@ -23,7 +23,7 @@
     <MudPaper Width="50px" Class="dmcockpit-navbar" Elevation="0">
         <MudButtonGroup VerticalAlign="true">
             <MudIconButton Icon="@Icons.Material.Filled.MusicNote" OnClick="@OpenSpotifyDrawer"></MudIconButton>
-            @foreach(var iframe in SettingsManager.IFrames)
+            @foreach (var iframe in SettingsManager.IFrames)
             {
                 <MudIconButton Icon="@iframe.Value.Item2" OnClick="@(() => OpenIFrameDrawer(iframe.Key))"></MudIconButton>
             }

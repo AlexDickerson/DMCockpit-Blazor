@@ -12,13 +12,9 @@
     <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
     <PackageReference Include="Emgu.CV.Bitmap" Version="4.8.1.5350" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.8.1.5350" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.20" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
     <PackageReference Include="MudBlazor" Version="6.19.1" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.20" />
   </ItemGroup>
-
 </Project>

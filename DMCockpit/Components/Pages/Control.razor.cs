@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Application = Microsoft.Maui.Controls.Application;
 using DMCockpit_Library.Javascript_Interop;
 using Microsoft.Maui.Platform;
+using DMCockpit_Library.Services;
 
 namespace DMCockpit.Components.Pages
 {
@@ -16,6 +17,9 @@ namespace DMCockpit.Components.Pages
 
         [Inject]
         private IDMCockpitInterop DMCockpitInterop { get; set; } = null!;
+
+        [Inject]
+        private IHTTPInterceptor HTTPInterceptor { get; set; } = null!;
 
         Window? playerWindow = null;
         Window? campaignWindow = null;
@@ -42,7 +46,7 @@ namespace DMCockpit.Components.Pages
             try
             {
                 await DMCockpitInterop.MakeElementDraggable(".draggable", "controlMap");
-                await DMCockpitInterop.ResizeWithScroll("mapViewPort", "controlMap");   
+                await DMCockpitInterop.ResizeWithScroll("mapViewPort", "controlMap");
                 await DMCockpitInterop.CreateDrawableCanvas("maskCanvas", "controlMap", "mapViewPort");
 
                 javascriptRegistered = true;
@@ -77,7 +81,16 @@ namespace DMCockpit.Components.Pages
 
         private void OpenNewDNDBeyondBrowser()
         {
-            OpenNewWindow<DndBeyondBrowser>("D&D Beyond Browser");
+            var page = new DndBeyondBrowser(HTTPInterceptor);
+
+            Window newWindow = new(page)
+            {
+                Title = "DND Beyond Browser",
+                X = 2000
+            };
+
+            var currentApp = Application.Current ?? throw new NullReferenceException("Application.Current is null. How?");
+            currentApp.OpenWindow(newWindow);
         }
 
         private void OpenNewWindow<T>(string title) where T : Page, new()

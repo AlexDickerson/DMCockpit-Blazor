@@ -15,7 +15,7 @@ namespace DMCockpit_Library.Services
     {
         public async Task IntakeDNDBeyondRequest(WebView webView, string url)
         {
-            if (url.Contains("/monster/"))
+            if (url.Contains("/monsters/"))
             {
                 var html = await webView.EvaluateJavaScriptAsync("document.documentElement.outerHTML");
 

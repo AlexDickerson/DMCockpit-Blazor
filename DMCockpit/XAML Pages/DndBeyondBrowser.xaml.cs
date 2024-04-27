@@ -8,7 +8,7 @@ public partial class DndBeyondBrowser : ContentPage
 {
     private IHTTPInterceptor httpInterceptor;
 
-	public DndBeyondBrowser(IHTTPInterceptor httpInterceptor)
+    public DndBeyondBrowser(IHTTPInterceptor httpInterceptor)
     {
         InitializeComponent();
 

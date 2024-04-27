@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DMCockpit.Components
 {
-    public partial class  SettingsDrawer: ComponentBase
+    public partial class SettingsDrawer : ComponentBase
     {
         [Inject]
         public ISettingsManager SettingsManager { get; set; }
@@ -20,7 +20,7 @@ namespace DMCockpit.Components
         private void OpenDialog()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true };
-            DialogService.Show<NewIFrameDialog>("New IFrame", options);
+            DialogService.Show<NewFrame>("New IFrame", options);
         }
 
         bool open;

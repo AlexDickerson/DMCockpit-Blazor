@@ -38,7 +38,7 @@ namespace DMCockpit_Library.Services
 
             settings = JsonSerializer.Deserialize<DMCockpitSettings>(File.ReadAllText(settingsFilePath));
         }
-        
+
         public Dictionary<string, string> PlaylistDictionary => settings.PlayListDictionary;
         public Dictionary<string, Tuple<string, string>> IFrames => settings.IFrameURLs;
 
