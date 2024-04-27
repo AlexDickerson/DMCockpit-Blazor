@@ -47,7 +47,7 @@ namespace DMCockpit_Library.Services
                 htmlNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, 'more-info-content')]").ToList();
                 var moreInfoBlock = htmlNodes[0];
 
-                var parsedHTML = monsterNode.InnerHtml + moreInfoBlock.InnerHtml;
+                var parsedHTML = monsterNode.OuterHtml + moreInfoBlock.OuterHtml;
 
                 OnImageUpdated(parsedHTML);
             }

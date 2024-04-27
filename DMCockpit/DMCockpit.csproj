@@ -116,6 +116,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Update="wwwroot\images\paper-texture.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\images\stat-block-top-texture.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Update="wwwroot\JSFolder\DMCockpit.js">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

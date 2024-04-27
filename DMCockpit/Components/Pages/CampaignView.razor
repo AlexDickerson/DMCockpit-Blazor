@@ -49,4 +49,238 @@
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 10px;
     }
+
+    .ability-block {
+        font-family: "Scala Sans Offc", Roboto, Helvetica, sans-serif;
+        font-size: 14px;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin: 10px 0;
+        color: #4F1300
+    }
+
+    .ability-block__stat {
+        width: 30%;
+        padding: 5px 0;
+        text-align: center
+    }
+
+    .ability-block__heading {
+        font-weight: bold
+    }
+
+    .ability-block__modifier {
+        margin-left: 2px
+    }
+
+    .mon-stat-block {
+        background: url("/images/paper-texture.png");
+        background-size: 100% auto;
+        background-position: top center;
+        background-repeat: no-repeat, repeat;
+        position: relative;
+        box-shadow: 0 0 5px #979AA4;
+        border: 1px solid #d4d0ce;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "Scala Sans Offc", Roboto, Helvetica, sans-serif;
+        font-size: 15px
+    }
+
+    .mon-stat-block::before,
+    .mon-stat-block::after {
+        content: "";
+        display: block;
+            background: url("../images/mon-summary/stat-bar-book.png") center;
+            background-size: 100% 100%;
+        height: 6px;
+        position: absolute;
+        left: -3px;
+        right: -3px
+    }
+
+    .mon-stat-block::before {
+        top: -3px
+    }
+
+    .mon-stat-block::after {
+        bottom: -3px
+    }
+
+.mon-stat-block__separator-img {
+    max-width: 100%;
+    min-height: 10px
+}
+
+.mon-stat-block__header {
+    line-height: 1.1
+}
+
+.mon-stat-block__name {
+    font-weight: bold;
+    font-size: 34px;
+    font-family: MrsEavesSmallCaps, Roboto, Helvetica, sans-serif;
+    color: #822000
+}
+
+    .mon-stat-block__name .mon-stat-block__name-link {
+        color: #822000
+    }
+
+        .mon-stat-block__name .mon-stat-block__name-link:hover,
+        .mon-stat-block__name .mon-stat-block__name-link:visited,
+        .mon-stat-block__name .mon-stat-block__name-link:active {
+            color: #822000
+        }
+
+.mon-stat-block__meta {
+    font-style: italic;
+    margin-bottom: 15px
+}
+
+.mon-stat-block__attribute,
+.mon-stat-block__feature {
+    margin: 5px 0;
+    color: #822000;
+    line-height: 1.2
+}
+
+.mon-stat-block__attribute-label,
+.mon-stat-block__feature-label {
+    font-weight: bold
+}
+
+.mon-stat-block__feature-label {
+    font-style: italic
+}
+
+.mon-stat-block__stat-block .ability-block {
+    color: #822000;
+    margin: 0
+}
+
+.mon-stat-block__tidbit {
+    margin: 5px 0;
+    color: #822000;
+    line-height: 1.2
+}
+
+.mon-stat-block__tidbit-label {
+    font-weight: bold
+}
+
+.mon-stat-block__tidbit-container {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.mon-stat-block__tidbit-spacer {
+    width: 40px;
+    min-width: 10px
+}
+
+.mon-stat-block__description-blocks {
+    margin-top: 20px
+}
+
+.mon-stat-block__description-block-heading,
+.mon-stat-block__description-block h3 {
+    border-bottom: 1px solid #822000;
+    color: #822000;
+    font-size: 24px;
+    font-weight: normal;
+    font-family: "Scala Sans Offc", Roboto, Helvetica, sans-serif;
+    line-height: 1.4;
+    margin-top: 20px;
+    margin-bottom: 15px
+}
+
+.mon-stat-block__description-block p {
+    margin-bottom: 10px
+}
+
+.mon-stat-block .tooltip-hover {
+    font-weight: bold !important
+}
+
+    .mon-stat-block .tooltip-hover,
+    .mon-stat-block .tooltip-hover:hover,
+    .mon-stat-block .tooltip-hover:focus,
+    .mon-stat-block .tooltip-hover:active,
+    .mon-stat-block .tooltip-hover:visited {
+        color: inherit !important;
+        font-weight: inherit !important;
+        text-decoration: underline;
+        text-decoration: underline solid #47D18C
+    }
+
+        .mon-stat-block .tooltip-hover.spell-tooltip,
+        .mon-stat-block .tooltip-hover.spell-tooltip:hover,
+        .mon-stat-block .tooltip-hover.spell-tooltip:focus,
+        .mon-stat-block .tooltip-hover.spell-tooltip:active,
+        .mon-stat-block .tooltip-hover.spell-tooltip:visited {
+            color: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: underline;
+            text-decoration: underline solid #704cd9
+        }
+
+        .mon-stat-block .tooltip-hover.monster-tooltip,
+        .mon-stat-block .tooltip-hover.monster-tooltip:hover,
+        .mon-stat-block .tooltip-hover.monster-tooltip:focus,
+        .mon-stat-block .tooltip-hover.monster-tooltip:active,
+        .mon-stat-block .tooltip-hover.monster-tooltip:visited {
+            color: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: underline;
+            text-decoration: underline solid #bc0f0f
+        }
+
+        .mon-stat-block .tooltip-hover.magic-item-tooltip,
+        .mon-stat-block .tooltip-hover.magic-item-tooltip:hover,
+        .mon-stat-block .tooltip-hover.magic-item-tooltip:focus,
+        .mon-stat-block .tooltip-hover.magic-item-tooltip:active,
+        .mon-stat-block .tooltip-hover.magic-item-tooltip:visited {
+            color: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: underline;
+            text-decoration: underline solid #0f5cbc
+        }
+
+        .mon-stat-block .tooltip-hover.vehicles-tooltip,
+        .mon-stat-block .tooltip-hover.vehicles-tooltip:hover,
+        .mon-stat-block .tooltip-hover.vehicles-tooltip:focus,
+        .mon-stat-block .tooltip-hover.vehicles-tooltip:active,
+        .mon-stat-block .tooltip-hover.vehicles-tooltip:visited {
+            color: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: underline;
+            text-decoration: underline solid #1b9af0
+        }
+
+    .mon-stat-block {
+        -webkit-column-count: 2;
+        column-count: 2
+    }
+}
+
+    .mon-stat-block {
+        box-shadow: none;
+        background: 0
+    }
+
+        .mon-stat-block::before {
+            border-top: 6px solid #999
+        }
+
+        .mon-stat-block::after {
+            border-bottom: 6px solid #999
+        }
+}
+
 </style>
