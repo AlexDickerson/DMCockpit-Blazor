@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
-namespace DMCockpit
+namespace DMCockpit.Services
 {
     public interface IHotKeyObersevable
     {
@@ -36,7 +36,7 @@ namespace DMCockpit
 
         [JSInvokable]
         public static async Task JsKeyDown(KeyboardEventArgs e)
-        {            
+        {
             ModifierKeys modifier;
 
             if (e.CtrlKey) modifier = ModifierKeys.Ctrl;

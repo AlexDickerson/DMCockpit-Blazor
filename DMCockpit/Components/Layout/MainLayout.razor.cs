@@ -1,4 +1,5 @@
-﻿using DMCockpit_Library.Services;
+﻿using DMCockpit.Services;
+using DMCockpit_Library.Services;
 using Emgu.CV.Features2D;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -19,6 +20,7 @@ namespace DMCockpit.Components.Layout
         public ISettingsManager SettingsManager { get; set; }
 
         SpotifyDrawer spotifyDrawer;
+        SettingsDrawer settingsDrawer;
 
         private Dictionary<string, IFrameDrawer> iframeDrawerElements = [];
 
@@ -44,6 +46,7 @@ namespace DMCockpit.Components.Layout
 
         private void OpenSettingsDrawer()
         {
+            settingsDrawer.OpenDrawer();
         }
 
         private void HotKeyHandler_HotKeyHandlerEvent(ModifierKeys modifier, string keysPressed)

@@ -5,6 +5,8 @@
 <MudPaper Elevation="25" Width="100%">
     <MudToolBar>
         <MudButton Variant="Variant.Filled" OnClick="NewPlayerWindow" hidden="@(playerWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>Player Window</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="NewCampaignWindow" hidden="@(campaignWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>Campaign Window</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="OpenNewDNDBeyondBrowser" hidden="@(campaignWindow != null)" StartIcon="@Icons.Material.Filled.Add" Disabled=@(playerWindow != null)>DNDBeyond Browser</MudButton>
 
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Style="margin-top:0px !important">
             <ButtonTemplate>

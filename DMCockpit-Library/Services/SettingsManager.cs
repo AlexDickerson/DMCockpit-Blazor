@@ -23,6 +23,18 @@ namespace DMCockpit_Library.Services
         public SettingsManager()
         {
             var settingsFilePath = Environment.GetEnvironmentVariable("DM_COCKPIT_SETTINGS_OVERRIDE") ?? "settings.json";
+            var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+            settingsFilePath = Path.Combine(currentDir, settingsFilePath);
+
+            if (!File.Exists(settingsFilePath))
+            {
+                settings = new DMCockpitSettings
+                {
+                    PlayListDictionary = new Dictionary<string, string>(),
+                    IFrameURLs = new Dictionary<string, Tuple<string, string>>()
+                };
+                WriteToJSON("settings.json");
+            }
 
             settings = JsonSerializer.Deserialize<DMCockpitSettings>(File.ReadAllText(settingsFilePath));
         }

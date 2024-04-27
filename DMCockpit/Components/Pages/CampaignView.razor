@@ -1,0 +1,51 @@
+﻿@using MudBlazor
+@using DMCockpit.Components
+
+<MudPaper id="campaign-view">
+    <MudPaper id="campaign-view-main">
+        <MudPaper>Column 1</MudPaper>
+        <MudPaper>
+            <MudPaper id="campaign-view-topbar">
+                <MudPaper>
+                    Absalom, Golarion
+                </MudPaper>
+                <MudPaper>
+                    Exploration
+                </MudPaper>
+                <MudPaper>
+                    <div style="display: flex; align-items: center;">
+                        <span>120</span>
+                        <MudImage Width="32" Height="32" Src="/images/gold.png"></MudImage>
+                        <span>3</span>
+                        <MudImage Width="32" Height="32" Src="/images/silver.png"></MudImage>
+                        <span>5</span>
+                        <MudImage Width="32" Height="32" Src="/images/copper.png"></MudImage>
+                    </div>
+
+                </MudPaper>
+            </MudPaper>
+            <MudPaper id="campaign-view-content">
+                <MudImage Src="@imageBase64" Width="1000" Height="800" ObjectFit="ObjectFit.Contain" ObjectPosition="ObjectPosition.LeftTop"></MudImage>
+            </MudPaper>
+        </MudPaper>
+        <MudPaper>Column 3</MudPaper>
+    </MudPaper>
+</MudPaper>
+
+<style>
+    #campaign-view-main {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        grid-gap: 10px;
+    }
+
+    #campaign-view-content {
+        overflow: hidden;
+    }
+
+    #campaign-view-topbar {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 10px;
+    }
+</style>

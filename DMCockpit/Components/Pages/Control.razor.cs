@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Application = Microsoft.Maui.Controls.Application;
 using DMCockpit_Library.Javascript_Interop;
+using Microsoft.Maui.Platform;
 
 namespace DMCockpit.Components.Pages
 {
@@ -17,6 +18,7 @@ namespace DMCockpit.Components.Pages
         private IDMCockpitInterop DMCockpitInterop { get; set; } = null!;
 
         Window? playerWindow = null;
+        Window? campaignWindow = null;
         private string imageBase64 = string.Empty;
         private bool javascriptRegistered = false;
 
@@ -65,18 +67,32 @@ namespace DMCockpit.Components.Pages
 
         private void NewPlayerWindow()
         {
-            var page = new PlayerViewPage();
+            OpenNewWindow<PlayerViewPage>("Player");
+        }
 
-            Window window = new(page)
+        private void NewCampaignWindow()
+        {
+            OpenNewWindow<CampaignViewPage>("Campaign");
+        }
+
+        private void OpenNewDNDBeyondBrowser()
+        {
+            OpenNewWindow<DndBeyondBrowser>("D&D Beyond Browser");
+        }
+
+        private void OpenNewWindow<T>(string title) where T : Page, new()
+        {
+            var page = new T();
+
+            Window newWindow = new(page)
             {
-                Title = "PlayerView",
+                Title = title,
                 X = 2000
             };
 
             var currentApp = Application.Current ?? throw new NullReferenceException("Application.Current is null. How?");
-            currentApp.OpenWindow(window);
+            currentApp.OpenWindow(newWindow);
 
-            playerWindow = window;
         }
 
         private async Task UploadFiles(IBrowserFile image)

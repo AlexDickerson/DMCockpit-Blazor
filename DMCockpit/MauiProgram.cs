@@ -64,6 +64,7 @@ namespace DMCockpit
             services.AddSingleton<IMiniTracking, MiniTracking>();
             services.AddSingleton<IHotKeyObersevable, HotKeyHandler>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
+            services.AddSingleton<IHTTPInterceptor, HTTPInterceptor>();
         }
     }
 }
