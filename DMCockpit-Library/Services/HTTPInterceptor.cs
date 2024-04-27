@@ -1,51 +1,58 @@
-﻿using System;
+﻿using DMCockpit.Services;
+using HtmlAgilityPack;
+using MudBlazor;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
+using static DMCockpit_Library.Services.HTTPInterceptor;
 
 namespace DMCockpit_Library.Services
 {
     public interface IHTTPInterceptor
     {
         Task IntakeDNDBeyondRequest(WebView webView, string url);
+
+        event DNDBeyondUpdated DNDBeyondUpdateEvent;
     }
+
+    public delegate void DNDBeyondUpdated(string html);
 
     public class HTTPInterceptor : IHTTPInterceptor
     {
+        public event DNDBeyondUpdated? DNDBeyondUpdateEvent;
+
+        private enum DNDTypes
+        {
+            Monsters,
+        }
+
         public async Task IntakeDNDBeyondRequest(WebView webView, string url)
         {
             if (url.Contains("/monsters/"))
             {
-                var html = await webView.EvaluateJavaScriptAsync("document.documentElement.outerHTML");
+                var html = await webView.EvaluateJavaScriptAsync("document.documentElement.innerHTML");
+                html = Regex.Replace(html, @"\\[Uu]([0-9A-Fa-f]{4})", m => char.ToString((char)ushort.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)));
+                html = Regex.Unescape(html);
 
-                var monStatBlocIndex = html.IndexOf("<div class=\"mon-stat-block\">");
+                var doc = new HtmlDocument();
+                doc.LoadHtml(html);
 
-                var closingIndex = GetClosingTagIndex(html, monStatBlocIndex);
+                var htmlNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, 'mon-stat-block')]").ToList();
+                var monsterNode = htmlNodes[0];
+                htmlNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, 'more-info-content')]").ToList();
+                var moreInfoBlock = htmlNodes[0];
+
+                var parsedHTML = monsterNode.InnerHtml + moreInfoBlock.InnerHtml;
+
+                OnImageUpdated(parsedHTML);
             }
         }
 
-        private int GetClosingTagIndex(string html, int startingIndex)
-        {
-            var closingDivIndex = startingIndex;
-            var openDivs = 1;
-            while (openDivs > 0)
-            {
-                closingDivIndex++;
-                if (html[closingDivIndex] == '<')
-                {
-                    if (html[closingDivIndex + 1] == '/')
-                    {
-                        openDivs--;
-                    }
-                    else
-                    {
-                        openDivs++;
-                    }
-                }
-            }
-
-            return closingDivIndex;
-        }
+        protected virtual void OnImageUpdated(string base64Image) => DNDBeyondUpdateEvent?.Invoke(base64Image);
     }
 }

@@ -25,8 +25,9 @@
                 </MudPaper>
             </MudPaper>
             <MudPaper id="campaign-view-content">
-                <MudImage Src="@imageBase64" Width="1000" Height="800" ObjectFit="ObjectFit.Contain" ObjectPosition="ObjectPosition.LeftTop"></MudImage>
-            </MudPaper>
+                @((MarkupString)rawHTML)
+@*                 <MudImage Src="@imageBase64" Width="1000" Height="800" ObjectFit="ObjectFit.Contain" ObjectPosition="ObjectPosition.LeftTop"></MudImage>
+ *@            </MudPaper>
         </MudPaper>
         <MudPaper>Column 3</MudPaper>
     </MudPaper>
