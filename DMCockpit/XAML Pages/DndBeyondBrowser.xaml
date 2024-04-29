@@ -2,10 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DMCockpit.XAML_Pages.DndBeyondBrowser"
+             Unloaded="DndBeyondBrowserUnloaded"
              Title="DndBeyondBrowser">
     <WebView x:Name="dndBeyondBrowser"
+            Shell.NavBarIsVisible="True"
+            Shell.TabBarIsVisible="True"
             Source="https://www.dndbeyond.com" 
             VerticalOptions="FillAndExpand" 
-            HorizontalOptions="FillAndExpand"
-        />
+            HorizontalOptions="FillAndExpand">
+    </WebView>
 </ContentPage>

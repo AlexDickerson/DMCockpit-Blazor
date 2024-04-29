@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Components.WebView;
-using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml.Controls;
+﻿using DMCockpit_Library.Managers;
+using Microsoft.AspNetCore.Components.WebView;
 using Microsoft.Web.WebView2.Core;
-using System.Net;
 
 namespace DMCockpit
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        private readonly ISettingsManager settingsManager;
+
+        public MainPage(ISettingsManager settingsManager)
         {
+            this.settingsManager = settingsManager;
+
             InitializeComponent();
 
             blazorWebView.BlazorWebViewInitialized += BlazorWebViewInitalized;
@@ -17,6 +19,8 @@ namespace DMCockpit
 
         private void AppUnloaded(object sender, EventArgs e)
         {
+            settingsManager.SaveSettings();
+
             Application.Current.Quit();
         }
 

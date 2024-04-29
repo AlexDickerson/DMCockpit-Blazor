@@ -1,5 +1,7 @@
 ﻿using DMCockpit.Services;
-using DMCockpit_Library.Javascript_Interop;
+using DMCockpit_Library;
+using DMCockpit_Library.Managers;
+using DMCockpit_Library.Relays;
 using DMCockpit_Library.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
@@ -30,7 +32,6 @@ namespace DMCockpit
                 {
                     windowsLifecycleBuilder.OnWindowCreated(window =>
                     {
-                        window.ExtendsContentIntoTitleBar = false;
                         if (window.Title != "PlayerView") return;
                         var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
                         var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
@@ -60,11 +61,13 @@ namespace DMCockpit
         private static void RegisterDMCockpitServices(this IServiceCollection services)
         {
             services.AddSingleton<IDisplayManager, DisplayManager>();
-            services.AddTransient<IDMCockpitInterop, DMCockpitInterop>();
+            services.AddTransient<IDMCockpitJSInterop, DMCockpitJSInterop>();
             services.AddSingleton<IMiniTracking, MiniTracking>();
             services.AddSingleton<IHotKeyObersevable, HotKeyHandler>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
-            services.AddSingleton<IHTTPInterceptor, HTTPInterceptor>();
+            services.AddSingleton<DndBeyondBrowserRelay, WebviewInterceptor>();
+            services.AddSingleton<IHTTPRelay, DMCockpitHTTPListener>();
+            services.AddSingleton<IDMCockpitConfigurationService, DMCockpitConfigurationService>();
         }
     }
 }

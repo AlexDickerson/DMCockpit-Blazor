@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+ 
+<MudPaper Width="50px">
+@*     <MudNavMenu>
+        <MudNavLink Href="/">Control</MudNavLink>
+        <MudNavLink Href="/">About</MudNavLink>
+    </MudNavMenu> *@
+    <MudDrawerContainer Class="mud-height-full">
+        <MudDrawer @bind-Open="@open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudNavMenu>
+                <MudNavLink Icon="@Icons.Material.Filled.Map" Href="/">Control</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Filled.Person" Href="/">Players</MudNavLink>
+            </MudNavMenu>
+        </MudDrawer>
+    </MudDrawerContainer>
+</MudPaper>

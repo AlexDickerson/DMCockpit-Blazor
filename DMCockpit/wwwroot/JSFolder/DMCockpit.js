@@ -8,12 +8,10 @@
                 console.log(event.type, event.target);
             },
             move(event) {
-                //if mouse is outside the bounds of the element, return
                 if (event.clientX < boundsElement.getBoundingClientRect().left || event.clientX > boundsElement.getBoundingClientRect().right || event.clientY < boundsElement.getBoundingClientRect().top || event.clientY > boundsElement.getBoundingClientRect().bottom) {
                     return;
                 }
 
-                //check if shift key is pressed
                 if (!event.shiftKey) {
                     return;
                 }
@@ -21,7 +19,6 @@
                 position.x += event.dx;
                 position.y += event.dy;
 
-                // Restrict the draggable object to the bounds of the specified element
                 const boundsRect = boundsElement.getBoundingClientRect();
                 const maxX = boundsRect.width - event.target.offsetWidth;
                 const maxY = boundsRect.height - event.target.offsetHeight;
@@ -75,7 +72,6 @@ function resizeImage(imgID) {
     const clientWidth = imageELement.clientWidth;
     const clientHeight = imageELement.clientHeight;
 
-    // calculate the largest size that fits in the container
     const widthRatio = clientWidth / naturalWidth;
     const heightRatio = clientHeight / naturalHeight;
 
@@ -118,9 +114,9 @@ function resizeWithScroll(elementID, restrictElementID) {
     element.e = document.getElementById(elementID);
     const restrictElement = document.getElementById(restrictElementID);
 
-    element.minZoom = Math.min(element.e.offsetWidth, element.e.offsetHeight) * .05; // = 100;
+    element.minZoom = Math.min(element.e.offsetWidth, element.e.offsetHeight) * .05;
     element.maxZoom = Math.min(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth, window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight);
-    element.zoomSpeed = 0.05; // = 1 nominal speed;
+    element.zoomSpeed = 0.05;
 
     if (element.e.addEventListener) {
         element.e.addEventListener("mousewheel", MouseWheelHandler, false);
@@ -128,13 +124,11 @@ function resizeWithScroll(elementID, restrictElementID) {
     } else element.e.attachEvent("onmousewheel", MouseWheelHandler);
 
     function MouseWheelHandler(e) {
-        // cross-browser wheel delta
         var e = window.event || e;
         var delta = e.wheelDelta * element.zoomSpeed;
         var newWidth = Math.max(element.e.offsetWidth + delta, element.minZoom);
         var newHeight = Math.max(element.e.offsetHeight + delta, element.minZoom);
 
-        // Maintain aspect ratio
         var aspectRatio = element.e.offsetWidth / element.e.offsetHeight;
         if (newWidth / newHeight > aspectRatio) {
             newWidth = newHeight * aspectRatio;
@@ -142,7 +136,6 @@ function resizeWithScroll(elementID, restrictElementID) {
             newHeight = newWidth / aspectRatio;
         }
 
-        // if new size would place part of the element outside the restrictElement, adjust the size
         var elementPosition = element.e.getBoundingClientRect();
         var restrictElementPosition = restrictElement.getBoundingClientRect();
         var elementTop = elementPosition.top;
@@ -173,7 +166,6 @@ function resizeWithScroll(elementID, restrictElementID) {
         element.e.style.width = newWidth + "px";
         element.e.style.height = newHeight + "px";
 
-        // Prevent scrolling the window when within the bounds of the element
         return false;
     }
 }
@@ -190,7 +182,6 @@ function drawableMaskCanvas(canvasID, mapID, excludeElement) {
     var context = canvasElement.getContext("2d");
     resize();
 
-    // last known position
     var pos = { x: 0, y: 0 };
 
     window.addEventListener('resize', resize);
@@ -198,7 +189,6 @@ function drawableMaskCanvas(canvasID, mapID, excludeElement) {
     document.addEventListener('mousedown', setPosition);
     document.addEventListener('mouseenter', setPosition);
 
-    // new position from mouse event
     function setPosition(e) {
         const canvasElement = document.getElementById(canvasID);
         const canvasRect = canvasElement.getBoundingClientRect();
@@ -207,40 +197,37 @@ function drawableMaskCanvas(canvasID, mapID, excludeElement) {
         pos.y = e.clientY - canvasRect.top;
     }
 
-    // resize canvas
     function resize() {
         context.canvas.width = mapElement.width;
         context.canvas.height = mapElement.height;
-        context.fillStyle = 'rgba(32, 32, 32, 0.8)'; // Darker more opaque grey
+        context.fillStyle = 'rgba(32, 32, 32, 0.8)';
         context.fillRect(0, 0, canvasElement.width, canvasElement.height);
     }
 
     function draw(e) {
-        // mouse left button must be pressed
         if (e.buttons !== 1) return;
 
-        //if mouse is over the excluded element, return
         if (e.target === excludeElement && e.shiftKey) {
             return;
         }
 
-        context.globalCompositeOperation = 'destination-out'; // Erase
-        context.beginPath(); // begin
+        context.globalCompositeOperation = 'destination-out';
+        context.beginPath();
 
         context.lineWidth = 30;
         context.lineCap = 'round';
-        context.strokeStyle = 'rgba(0, 0, 0, 1)'; // Fully opaque black
+        context.strokeStyle = 'rgba(0, 0, 0, 1)';
 
-        context.moveTo(pos.x, pos.y); // from
+        context.moveTo(pos.x, pos.y);
         setPosition(e);
-        context.lineTo(pos.x, pos.y); // to
+        context.lineTo(pos.x, pos.y);
 
-        context.stroke(); // draw it!
+        context.stroke();
 
         maskHasChanged = true;
         hasProvidedMask = false;
 
-        context.globalCompositeOperation = 'source-over'; // Restore default
+        context.globalCompositeOperation = 'source-over';
     }
 }
 
@@ -254,7 +241,6 @@ function getCanvasBitmap(canvasID) {
 
     var canvasElement = document.getElementById(canvasID);
 
-    //return an array that indicates which pixels are transparent
     var context = canvasElement.getContext("2d");
     context.willReadFrequently = true;
     var imageData = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
@@ -279,7 +265,6 @@ function overlayMaskCanvas(maskCanvasID, mapCanvasID) {
     var maskCanvasElement = document.getElementById(maskCanvasID);
     var mapCanvasElement = document.getElementById(mapCanvasID);
 
-    //position the mask canvas over the map canvas
     maskCanvasElement.style.position = 'absolute';
     maskCanvasElement.style.left = mapCanvasElement.offsetLeft + 'px';
     maskCanvasElement.style.top = mapCanvasElement.offsetTop + 'px';
@@ -311,7 +296,6 @@ window.JsFunctions = {
         };
 
         window.document.addEventListener('keydown', function (e) {
-            // Check if Shift, Ctrl, or Alt is pressed along with another key
             if ((e.shiftKey || e.ctrlKey || e.altKey) && e.key !== "Shift" && e.key !== "Control" && e.key !== "Alt") {
                 e.preventDefault();
                 DotNet.invokeMethodAsync('DMCockpit', 'JsKeyDown', serializeEvent(e));
@@ -319,3 +303,75 @@ window.JsFunctions = {
         });
     }
 };
+
+function GetElementStyleByClass(className) {
+    var element = document.getElementsByClassName(className)[0];
+    var children = element.children;
+
+    var styleString = GetStylesForElement(element);
+
+    for (var i = 0; i < children.length; i++) {
+        styleString += GetStylesForElement(children[i]);
+    }
+
+    return styleString;
+}
+
+function GetStylesForElement(element) {
+    var styles = window.getComputedStyle(element);
+
+    var styleNames = [];
+
+    for (var i = 0; i < styles.length; i++) {
+        styleNames.push(styles[i]);
+    }
+
+    var styleValues = [];
+
+    for (var i = 0; i < styles.length; i++) {
+        styleValues.push(styles.getPropertyValue(styles[i]));
+    }
+
+    var styleString = "";
+
+    for (var i = 0; i < styles.length; i++) {
+        styleString += styles[i] + ":" + styles.getPropertyValue(styles[i]) + ";";
+    }
+
+    return styleString;
+}
+
+function GetElementsByClass(className) {
+    return document.getElementsByClassName(className);
+}
+
+function AddGetImageSrcButton(elements, className) {
+    elements = Array.from(elements);
+
+    elements.forEach(element => {
+        var newButton = document.createElement("button");
+
+        newButton.innerHTML = "Show Image To Players";
+
+        element.parentElement.parentElement.appendChild(newButton);
+
+        newButton.addEventListener("click", function () {
+            var content = GetImageSrcByClassName(className);
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://localhost:8080", true);
+            request.send(content);
+        });
+    })
+}
+
+function GetImageSrcByClassName(className) {
+    var imageElements = document.getElementsByClassName(className);
+
+    var imageSrcs = [];
+
+    for (var i = 0; i < imageElements.length; i++) {
+        imageSrcs.push(imageElements[i].src);
+    }
+
+    return imageSrcs[0];
+}

@@ -1,24 +1,48 @@
-using DMCockpit_Library.Services;
-using Microsoft.AspNetCore.Components.WebView.Maui;
-using Microsoft.UI.Xaml.Controls;
+using DMCockpit_Library.Extensions;
+using DMCockpit_Library.Managers;
+using DMCockpit_Library.Relays;
 
 namespace DMCockpit.XAML_Pages;
 
 public partial class DndBeyondBrowser : ContentPage
 {
-    private IHTTPInterceptor httpInterceptor;
+    private DndBeyondBrowserRelay webViewInterceptor;
+    private ISettingsManager settingsManager;
+    private string jsFileText;
+    private bool jsLoaded = false;
 
-    public DndBeyondBrowser(IHTTPInterceptor httpInterceptor)
+    public DndBeyondBrowser(DndBeyondBrowserRelay webViewInterceptor, ISettingsManager settingsManager)
     {
         InitializeComponent();
 
-        this.httpInterceptor = httpInterceptor;
+        this.webViewInterceptor = webViewInterceptor;
+        this.settingsManager = settingsManager;
 
         dndBeyondBrowser.Navigated += Navigated;
+
+        var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+        var filePath = Path.Combine(currentDir, "wwwroot/JSFolder/DMCockpit.js");
+        var jsFileText = File.ReadAllText(filePath);
+
+        this.jsFileText = jsFileText.MinifyJS();
     }
 
     private async void Navigated(object sender, WebNavigatedEventArgs e)
     {
-        httpInterceptor.IntakeDNDBeyondRequest(sender as WebView, e.Url);
+        WebView webView = sender as WebView;
+
+        await webView.EvaluateJavaScriptAsync(jsFileText);
+
+        webViewInterceptor.IntakeDNDBeyondRequest(sender as WebView, e.Url);
+    }
+
+    private void ClickGestureRecognizer_Clicked(object sender, PointerEventArgs e)
+    {
+        Console.WriteLine("test");
+    }
+
+    public void DndBeyondBrowserUnloaded(object sender, EventArgs e)
+    {
+        settingsManager.SaveWindowLocation("DndBeyondBrowser", (int)this.Window.X, (int)this.Window.Y);
     }
 }

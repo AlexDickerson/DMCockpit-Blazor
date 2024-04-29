@@ -80,9 +80,6 @@
       <Compile Update="XAML Pages\PlayerViewPage.xaml.cs">
         <DependentUpon>PlayerViewPage.xaml</DependentUpon>
       </Compile>
-      <Compile Update="XAML Pages\DndBeyond.xaml.cs">
-        <DependentUpon>DndBeyond.xaml</DependentUpon>
-      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -93,9 +90,6 @@
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
       <MauiXaml Update="XAML Pages\PlayerViewPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
-      <MauiXaml Update="XAML Pages\DndBeyond.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
       <MauiXaml Update="XAML Pages\Spotify.xaml">
@@ -112,11 +106,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\JSFolder\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Update="wwwroot\images\paper-texture.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\images\parchmentBackground.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Update="wwwroot\images\stat-block-top-texture.png">

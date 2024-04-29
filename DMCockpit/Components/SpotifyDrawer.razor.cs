@@ -1,7 +1,6 @@
 ﻿using MudBlazor;
 using Microsoft.AspNetCore.Components;
-using System.Diagnostics.Contracts;
-using DMCockpit_Library.Services;
+using DMCockpit_Library.Managers;
 
 namespace DMCockpit.Components
 {

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DMCockpit.XAML_Pages.PlayerViewPage"
              xmlns:local="clr-namespace:DMCockpit"
-             xmlns:pages="clr-namespace:DMCockpit.Components.Pages"
+             xmlns:pages="clr-namespace:DMCockpit.Pages"
              BackgroundColor="{DynamicResource PageBackgroundColor}"
              Shell.NavBarIsVisible="false"
              Shell.TabBarIsVisible="false"
