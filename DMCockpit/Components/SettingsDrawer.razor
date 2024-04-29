@@ -1,5 +1,66 @@
 ﻿﻿@using MudBlazor
 
-<MudDrawer @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary" Width="600px" Height="900px">
-    <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">Add Embed</MudButton>
+<MudDrawer id="settingsDrawer" @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary" Width="900px" Height="900px">
+    <MudRadioGroup @bind-Value="Dense_Radio">
+        <MudRadio Value="true" Color="Color.Primary">DND 5e</MudRadio>
+        <MudRadio Value="false" Color="Color.Primary">PF 2e</MudRadio>
+    </MudRadioGroup>
+
+    <MudDataGrid Items="SettingsManager.PlaylistDictionary" Filterable="false" Dense="true" Style="width: 40%;">
+        <Columns>
+            <PropertyColumn Property="x => x.Key" Title="Playlist Name" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton OnClick="@(() => DeletePlaylist(context.Item.Key))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Delete</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField  @bind-Value="playListName" Label="Playlist Name"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField  @bind-Value="playListEmbedUrl" Label="Embed URL"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4" Style="align-content: center">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="AddPlayList">Add Playlist</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudDataGrid Items="SettingsManager.IFrames" Filterable="false" Dense="true" Style="width: 40%; margin-top: 20px;">
+        <Columns>
+            <PropertyColumn Property="x => x.Key" Title="IFrame Name" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton OnClick="@(() => DeletePlaylist(context.Item.Key))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Delete</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+
+    <MudGrid> 
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="iframeName" Label="IFrame Name"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="iframeUrl" Label="Embed URL"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4" Style="align-content: center">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="AddIframe">Add IFrame</MudButton>
+        </MudItem>
+    </MudGrid>
 </MudDrawer>
+
+<style>
+    #settingsDrawer {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+</style>

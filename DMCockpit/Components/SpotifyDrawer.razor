@@ -10,7 +10,7 @@
 
     @foreach (var playList in SettingsManager.PlaylistDictionary)
     {
-        <iframe class="spotify-iframe" src="@playList.Value" hidden="@playlistHidden[playList.Key]"
+        <iframe class="spotify-iframe" src="@playList.Value" hidden="@IsPlaylistHidden(playList.Key)"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     }
 </MudDrawer>

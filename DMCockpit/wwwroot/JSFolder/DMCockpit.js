@@ -297,7 +297,6 @@ window.JsFunctions = {
 
         window.document.addEventListener('keydown', function (e) {
             if ((e.shiftKey || e.ctrlKey || e.altKey) && e.key !== "Shift" && e.key !== "Control" && e.key !== "Alt") {
-                e.preventDefault();
                 DotNet.invokeMethodAsync('DMCockpit', 'JsKeyDown', serializeEvent(e));
             }
         });

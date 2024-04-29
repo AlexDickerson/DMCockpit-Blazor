@@ -12,10 +12,51 @@ namespace DMCockpit.Components
         [Inject]
         public IDialogService DialogService { get; set; } = default!;
 
-        private void OpenDialog()
+        public bool Dense_Radio { get; set; } = true;
+
+        public string playListName = string.Empty;
+        public string playListEmbedUrl = string.Empty;
+
+        public string iframeName = string.Empty;
+        public string iframeUrl = string.Empty;
+
+        public void AddPlayList()
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true };
-            DialogService.Show<NewFrame>("New IFrame", options);
+            if (string.IsNullOrEmpty(playListName) || string.IsNullOrEmpty(playListEmbedUrl))
+            {
+                return;
+            }
+
+            SettingsManager.PlaylistDictionary.Add(playListName, playListEmbedUrl);
+            playListName = string.Empty;
+            playListEmbedUrl = string.Empty;
+
+            SettingsManager.SaveSettings();
+
+            StateHasChanged();
+        }
+
+        public void AddIframe()
+        {
+            if (string.IsNullOrEmpty(iframeName) || string.IsNullOrEmpty(iframeUrl))
+            {
+                return;
+            }
+
+            SettingsManager.IFrames.Add(iframeName, new(iframeUrl, Icons.Material.Filled.Book));
+            iframeName = string.Empty;
+            iframeUrl = string.Empty;
+
+            SettingsManager.SaveSettings();
+
+            StateHasChanged();
+        }
+
+        public void DeletePlaylist(string key)
+        {
+            SettingsManager.PlaylistDictionary.Remove(key);
+            SettingsManager.SaveSettings();
+            StateHasChanged();
         }
 
         bool open;

@@ -20,6 +20,16 @@ namespace DMCockpit.Components
             }
         }
 
+        private bool IsPlaylistHidden(string playlistName)
+        {
+            if(!playlistHidden.ContainsKey(playlistName))
+            {
+                playlistHidden.Add(playlistName, true);
+            }
+
+            return playlistHidden[playlistName];
+        }
+
         private void TogglePlayList(string playlistName)
         {
             foreach (var key in playlistHidden.Keys)
